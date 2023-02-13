@@ -3,7 +3,7 @@ import { TableRow, TableCell } from '@material-ui/core';
 
 interface ClientProps {
   client: {
-    id: number;
+    id: string;
     name: string;
     dob: string;
     height: string;
@@ -28,7 +28,7 @@ const Client: React.FC<ClientProps> = ({ client }) => {
   const weightInLbs = Math.round(parseInt(client.weight));
 
   return (
-    <TableRow key={client.id}>
+   <>
       <TableCell>{client.name}</TableCell>
       <TableCell>{formatDate(client.dob)}</TableCell>
       <TableCell>{heightInInches} in</TableCell>
@@ -36,7 +36,7 @@ const Client: React.FC<ClientProps> = ({ client }) => {
       <TableCell>{client.goals}</TableCell>
       <TableCell>{client.notes}</TableCell>
       <TableCell>{client.program}</TableCell>
-    </TableRow>
+   </>
   );
 };
 

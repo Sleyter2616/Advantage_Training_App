@@ -5,6 +5,7 @@ export interface Movement {
   weight: number;
   sets: number;
   reps: number;
+  notes?: string
 }
 
 export interface TrainingProgram {
@@ -18,19 +19,19 @@ export interface TrainingProgram {
 }
 
 export type Client = {
-    id: string;
-    name: string;
-    dob: string;
-    height: number;
-    weight: number;
-    goals: string;
-    notes?: string;
-    program?: string;
-    trainingProgram?: TrainingProgram[]
-    movements?: Movement[];
-    notesHistory?: string[];
-  };
-  
+  id: string;
+  name: string;
+  dob: string;
+  height: string;
+  weight: string;
+  goals: string;
+  notes?: string;
+  program?: string;
+  trainingProgram?: TrainingProgram[];
+  movements?: Movement[];
+  notesHistory?: Note[];
+};
+
 
 
 

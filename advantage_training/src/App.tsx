@@ -18,7 +18,7 @@ function App() {
     element={<AddClientPage clients={[]} onAddClient={(client) => console.log(client)} />}
   />
   <Route
-  path="/clients/:clientId/add-program"
+ path="/clients/:id/add-program/:name"
   element={<AddProgram onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />}
 />
 

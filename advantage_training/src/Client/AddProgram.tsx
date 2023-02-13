@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingProgram, Movement } from './types';
 import { Formik, Form, Field } from 'formik';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import { TextField, Button, Typography, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,8 +36,12 @@ const useStyles = makeStyles({
 
 const days = ['Monday', 'Tuesday', 'Wednesday'];
 
+
+
 const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const clientName = location.state?.clientName;
 
   const classes = useStyles();
   const { clientId } = useParams();
@@ -48,8 +52,6 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
     programName: '',
     program: [
       { day: 'Day 1', movements: [{ id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 }] },
-      { day: 'Day 2', movements: [{ id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 }] },
-      { day: 'Day 3', movements: [{ id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 }] },
     ],
   });
   
@@ -79,6 +81,9 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
       <Typography variant="h4" component="h1" align="center">
         Add New Training Program
       </Typography>
+      <Typography variant="h5" component="h2" align="center">
+  {`Client: ${clientName}`}
+</Typography>
       <Formik
         initialValues={values}
         validationSchema={validationSchema}
@@ -105,86 +110,105 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
         <Typography variant="h5" component="h2" align="center">
           {day.day}
         </Typography>
+        <Button
+                className={classes.button}
+                onClick={() => {
+                  const newMovement = {  id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 };
+                  const newProgram = [...values.program];
+                  newProgram[index].movements.push(newMovement);
+                  handleChange({ target: { name: `trainingProgram[${index}].movements`, value: newProgram[index].movements } });
+                }}
+              >
+                Add Movement to {day.day}
+              </Button>
       </Grid>
-      {day.movements.map((movement, movementIndex) => (
-        <React.Fragment key={movement.id}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              className={classes.textField}
-              id={`program.${index}.movements.${movementIndex}.name`}
-              label="Movement"
-              name={`program.${index}.movements.${movementIndex}.name`}
-              value={movement.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <TextField
-              className={classes.textField}
-              id={`program.${index}.movements.${movementIndex}.weight`}
-              label="Weight"
-              name={`program.${index}.movements.${movementIndex}.weight`}
-              type="number"
-              value={movement.weight}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <TextField
-              className={classes.textField}
-              id={`program.${index}.movements.${movementIndex}.sets`}
-              label="Sets"
-              name={`program.${index}.movements.${movementIndex}.sets`}
-              type="number"
-              value={movement.sets}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <TextField
-              className={classes.textField}
-              id={`program.${index}.movements.${movementIndex}.reps`}
-              label="Reps"
-              name={`program.${index}.movements.${movementIndex}.reps`}
-              type="number"
-              value={movement.reps}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </Grid>
-        </React.Fragment>
-      ))}
+  {day.movements.map((movement, movementIndex) => (
+    <div key={movement.id} style={{ margin: '1rem' }}>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.movements.${movementIndex}.name`}
+          label="Movement"
+          name={`program.${index}.movements.${movementIndex}.name`}
+          value={movement.name}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </Grid>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.movements.${movementIndex}.weight`}
+          label="Weight (lbs)"
+          name={`program.${index}.movements.${movementIndex}.weight`}
+          type="number"
+          value={movement.weight}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </Grid>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.movements.${movementIndex}.sets`}
+          label="Sets"
+          name={`program.${index}.movements.${movementIndex}.sets`}
+          type="number"
+          value={movement.sets}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </Grid>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.movements.${movementIndex}.reps`}
+          label="Reps"
+          name={`program.${index}.movements.${movementIndex}.reps`}
+          value={movement.reps}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </Grid>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.movements.${movementIndex}.notes`}
+          label="Notes"
+          name={`program.${index}.movements.${movementIndex}.notes`}
+          value={movement.notes}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </Grid>
+    </div>
+  ))}
+
       <Grid item xs={12}>
         {values.program.length - 1 === index && (
-          <Button
-            className={classes.button}
-            variant="contained"
-            onClick={() =>
-              setValues({
-                ...values,
-                program: [
-                  ...values.program,
-                  {
-                    day: days[values.program.length],
+        <Button
+        className={classes.button}
+        variant="contained"
+        onClick={() =>
+           handleChange({
+              target: {
+                 name: `program[${values.program.length}]`,
+                 value: {
+                    day: `Day ${values.program.length + 1}`,
                     movements: [{ id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 }],
-                  },
-                ],
-              })
-            }
-          >
-            Add Day
-          </Button>
+                 },
+              },
+           })
+        }
+     >
+        Add Day to Program
+     </Button>
         )}
       </Grid>
     </React.Fragment>
   ))
 }
-
         </Grid>
-
         <Button className={classes.button} variant="contained" type="submit">
           Add Program
         </Button>
