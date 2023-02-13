@@ -50,10 +50,10 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
     weight: 0,
     goals: '',
     notes: '',
-    program: '',
-    trainingProgram: [
-      { day: '', movements: [{ name: '', weight:0 ,sets:0, reps:0 }] },
-    ],
+    // program: '',
+    // trainingProgram: [
+    //   { day: '', movements: [{ name: '', weight:0 ,sets:0, reps:0 }] },
+    // ],
   });
 
   const handleSubmit = (values: Client) => {
@@ -72,17 +72,17 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
     notes: Yup.string().notRequired(),
-    program: Yup.string().required('Required'),
-    trainingProgram: Yup.array().of(
-      Yup.object().shape({
-        day: Yup.string().required('Required'),
-        movements: Yup.array().of(
-          Yup.object().shape({
-            name: Yup.string().required('Required'),
-          })
-        ).required(),
-      })
-    ).min(1).max(7),
+    // program: Yup.string().required('Required'),
+    // trainingProgram: Yup.array().of(
+    //   Yup.object().shape({
+    //     day: Yup.string().required('Required'),
+    //     movements: Yup.array().of(
+    //       Yup.object().shape({
+    //         name: Yup.string().required('Required'),
+    //       })
+    //     ).required(),
+    //   })
+    // ).min(1).max(7),
   });
   
   return (
@@ -161,7 +161,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
               error={touched.notes && Boolean(errors.notes)}
               helperText={touched.notes && errors.notes}
             />
-                  <TextField
+                  {/* <TextField
         className={classes.textField}
         id="program"
         label="Program"
@@ -214,7 +214,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
             </Grid>
           </React.Fragment>
         ))}
-      </Grid>
+      </Grid> */}
       <Button className={classes.button} type="submit" variant="contained">
         Add Client
       </Button>

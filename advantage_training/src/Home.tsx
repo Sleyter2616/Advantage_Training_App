@@ -133,15 +133,6 @@ const HomePage = () => {
             margin="normal"
           />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-          >
-            Search
-          </Button>
-        </div>
       </form>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
         <Button
@@ -153,11 +144,13 @@ const HomePage = () => {
           Add Client
         </Button>
       </div>
-  
       <Table className={classes.table}>
         <TableBody>
           {filteredClients.map((client) => (
+            <>
             <ClientPage key={client.id} client={client} />
+            <Link to={`/clients/${client.id}/add-program`}>Add Program</Link>
+            </>
           ))}
         </TableBody>
       </Table>

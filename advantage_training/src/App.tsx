@@ -4,6 +4,7 @@ import './App.css';
 import LoginPage from './LoginPage';
 import Home from './Home'
 import AddClientPage from './Client/AddClientPage';
+import AddProgram from './Client/AddProgram';
 
 function App() {
   const navigate = useNavigate();
@@ -16,6 +17,11 @@ function App() {
     path="/add-client"
     element={<AddClientPage clients={[]} onAddClient={(client) => console.log(client)} />}
   />
+  <Route
+  path="/clients/:clientId/add-program"
+  element={<AddProgram onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />}
+/>
+
 </Routes>
       </div>
   );
