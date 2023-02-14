@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import Home from './Home'
 import AddClientPage from './Client/AddClientPage';
 import AddProgram from './Client/AddProgram';
+import Programs from './Client/Programs'
 
 function App() {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ function App() {
  path="/clients/:id/add-program/:name"
   element={<AddProgram onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />}
 />
+<Route
+          path="/clients/:clientId/programs"
+          element={<Programs />}
+        />
 
 </Routes>
       </div>

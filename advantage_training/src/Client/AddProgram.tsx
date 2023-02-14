@@ -54,7 +54,6 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
       { day: 'Day 1', movements: [{ id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 }] },
     ],
   });
-  
 
   const handleSubmit = (values: TrainingProgram) => {
     const newTrainingProgramWithId = { ...values, id: uuidv4() };
@@ -73,7 +72,7 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
           })
         ).required(),
       })
-    ).min(1).max(7),
+    ).min(1),
   });
 
   return (
@@ -110,17 +109,26 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
         <Typography variant="h5" component="h2" align="center">
           {day.day}
         </Typography>
+        <TextField
+          className={classes.textField}
+          id={`program.${index}.notes`}
+          label={`Notes for ${day.day}`}
+          name={`program.${index}.notes`}
+          value={day.notes}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
         <Button
-                className={classes.button}
-                onClick={() => {
-                  const newMovement = {  id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 };
-                  const newProgram = [...values.program];
-                  newProgram[index].movements.push(newMovement);
-                  handleChange({ target: { name: `trainingProgram[${index}].movements`, value: newProgram[index].movements } });
-                }}
-              >
-                Add Movement to {day.day}
-              </Button>
+          className={classes.button}
+          onClick={() => {
+            const newMovement = {  id: uuidv4(), name: '', weight: 0, sets: 0, reps: 0 };
+            const newProgram = [...values.program];
+            newProgram[index].movements.push(newMovement);
+            handleChange({ target: { name: `trainingProgram[${index}].movements`, value: newProgram[index].movements } });
+          }}
+        >
+          Add Movement to {day.day}
+        </Button>
       </Grid>
   {day.movements.map((movement, movementIndex) => (
     <div key={movement.id} style={{ margin: '1rem' }}>
@@ -170,23 +178,12 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
           onBlur={handleBlur}
         />
       </Grid>
-      <Grid item xs={12} sm={10}>
-        <TextField
-          className={classes.textField}
-          id={`program.${index}.movements.${movementIndex}.notes`}
-          label="Notes"
-          name={`program.${index}.movements.${movementIndex}.notes`}
-          value={movement.notes}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-      </Grid>
     </div>
   ))}
 
       <Grid item xs={12}>
         {values.program.length - 1 === index && (
-        <Button
+                  <Button
         className={classes.button}
         variant="contained"
         onClick={() =>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TableRow, TableCell } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
+import { TableRow, TableCell, Button } from '@material-ui/core';
 
 interface ClientProps {
   client: {
@@ -24,6 +25,10 @@ const formatDate = (dateString: string): string => {
 }
 
 const Client: React.FC<ClientProps> = ({ client }) => {
+  const navigate = useNavigate();
+const handleViewProgramClick = () => {
+  navigate(`/clients/${client.id}/programs`);
+};
   const heightInInches = Math.round(parseInt(client.height));
   const weightInLbs = Math.round(parseInt(client.weight));
 
@@ -35,7 +40,9 @@ const Client: React.FC<ClientProps> = ({ client }) => {
       <TableCell>{formatNumber(weightInLbs)} lbs</TableCell>
       <TableCell>{client.goals}</TableCell>
       <TableCell>{client.notes}</TableCell>
-      <TableCell>{client.program}</TableCell>
+      <TableCell>    <Button variant="contained" color="primary" onClick={handleViewProgramClick}>
+      View Programs
+    </Button></TableCell>
    </>
   );
 };

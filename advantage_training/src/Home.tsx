@@ -171,7 +171,7 @@ const HomePage = () => {
       <TableBody>
   {filteredClients.map((client) => (
     <TableRow key={client.id}>
-      <ClientPage client={client} />
+      <ClientPage client={client}  />
       <TableCell>
         <Button
           variant="contained"
@@ -190,6 +190,5 @@ const HomePage = () => {
   </Container>
 );
 
-  
           }
           export default (HomePage)

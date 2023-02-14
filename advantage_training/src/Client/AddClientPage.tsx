@@ -50,10 +50,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
     weight: '',
     goals: '',
     notes: '',
-    // program: '',
-    // trainingProgram: [
-    //   { day: '', movements: [{ name: '', weight:0 ,sets:0, reps:0 }] },
-    // ],
+ 
   });
 
   const handleSubmit = (values: Client) => {
@@ -72,17 +69,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
     notes: Yup.string().notRequired(),
-    // program: Yup.string().required('Required'),
-    // trainingProgram: Yup.array().of(
-    //   Yup.object().shape({
-    //     day: Yup.string().required('Required'),
-    //     movements: Yup.array().of(
-    //       Yup.object().shape({
-    //         name: Yup.string().required('Required'),
-    //       })
-    //     ).required(),
-    //   })
-    // ).min(1).max(7),
+  
   });
   
   return (
@@ -161,60 +148,6 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
               error={touched.notes && Boolean(errors.notes)}
               helperText={touched.notes && errors.notes}
             />
-                  {/* <TextField
-        className={classes.textField}
-        id="program"
-        label="Program"
-        name="program"
-        value={values.program}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={touched.program && Boolean(errors.program)}
-        helperText={touched.program && errors.program}
-      />
-
-      <Grid container spacing={2}>
-        {values.trainingProgram.map((day, index) => (
-          <React.Fragment key={day.day}>
-            <Grid item xs={12} sm={4}>
-              <Typography variant="h5" component="h2" align="center">{days[index]}</Typography>
-              <TextField
-                className={classes.textField}
-                label="Day"
-                name={`trainingProgram[${index}].day`}
-                value={values.trainingProgram[index].day}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <Button
-                className={classes.button}
-                onClick={() => {
-                  const newMovement = { name: '', weight: 0, sets: 0, reps: 0 };
-                  const newProgram = [...values.trainingProgram];
-                  newProgram[index].movements.push(newMovement);
-                  handleChange({ target: { name: `trainingProgram[${index}].movements`, value: newProgram[index].movements } });
-                }}
-              >
-                Add Movement
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <Typography variant="h6" component="h3" align="center">Movements</Typography>
-              {values.trainingProgram[index].movements.map((movement, movementIndex) => (
-                <TextField
-                  key={movementIndex}
-                  className={classes.textField}
-                  label={`Movement ${movementIndex + 1}`}
-                  name={`trainingProgram[${index}].movements[${movementIndex}].name`}
-                  value={values.trainingProgram[index].movements[movementIndex].name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              ))}
-            </Grid>
-          </React.Fragment>
-        ))}
-      </Grid> */}
       <Button className={classes.button} type="submit" variant="contained">
         Add Client
       </Button>

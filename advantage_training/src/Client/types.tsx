@@ -5,7 +5,6 @@ export interface Movement {
   weight: number;
   sets: number;
   reps: number;
-  notes?: string
 }
 
 export interface TrainingProgram {
@@ -15,6 +14,7 @@ export interface TrainingProgram {
   program: {
     day: string;
     movements: Movement[];
+    notes?: string
   }[];
 }
 
