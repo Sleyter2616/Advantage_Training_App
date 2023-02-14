@@ -50,7 +50,6 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
     weight: '',
     goals: '',
     notes: '',
- 
   });
 
   const handleSubmit = (values: Client) => {
@@ -69,9 +68,9 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
     notes: Yup.string().notRequired(),
-  
+
   });
-  
+
   return (
     <div>
       <Typography variant="h4" component="h1" align="center">Add New Client</Typography>

@@ -106,7 +106,7 @@ export const handleProgramNameChange = (id: string, newName: string,
       })
     );
   };
-  
+
  export const handleMovementWeightChange = (
     programId: string,
     dayIndex: number,
@@ -160,7 +160,7 @@ export const handleProgramNameChange = (id: string, newName: string,
       })
     );
   };
-  
+
  export const handleMovementRepsChange = (programId: string, dayIndex: number, movementIndex: number, newReps: string,  programs: Program[],
     setPrograms: React.Dispatch<React.SetStateAction<Program[]>>) => {
     setPrograms((prevPrograms) => {
@@ -202,19 +202,19 @@ export const handleProgramNameChange = (id: string, newName: string,
       });
     });
   };
-  
+
  export const handleAddMovement = (programId: string, dayIndex: number,  programs: Program[],
     setPrograms: React.Dispatch<React.SetStateAction<Program[]>>) => {
     const updatedPrograms = programs.map((program) => {
       if (program.id !== programId) {
         return program;
       }
-  
+
       const updatedDays = program.days.map((day, index) => {
         if (index !== dayIndex) {
           return day;
         }
-  
+
         const updatedMovements = [
           ...day.movements,
           {
@@ -224,19 +224,19 @@ export const handleProgramNameChange = (id: string, newName: string,
             reps: "",
           },
         ];
-  
+
         return {
           ...day,
           movements: updatedMovements,
         };
       });
-  
+
       return {
         ...program,
         days: updatedDays,
       };
     });
-  
+
     setPrograms(updatedPrograms);
   };
-  
+

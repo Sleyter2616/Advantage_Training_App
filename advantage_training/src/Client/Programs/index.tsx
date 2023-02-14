@@ -51,9 +51,7 @@ interface Program {
   }>;
 }
 const buttonStyle={
-
     margin:'12px'
-  
 }
 
 const Programs = () => {
@@ -62,11 +60,9 @@ const Programs = () => {
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
     // send the program data to the backend
     console.log(programs);
   }
-  
 
   useEffect(() => {
     // fetch the program data for the client from an API or a local store
@@ -432,9 +428,8 @@ const Programs = () => {
       Submit programs
     </Button>
 </Typography>
-
         </React.Fragment>
-        
+
       ))}
     </form>
   );

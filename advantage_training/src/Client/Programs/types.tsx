@@ -5,13 +5,13 @@ export interface Movement {
     sets: string;
     reps: string;
   }
-  
+
  export interface Day {
     name: string;
     movements: Movement[];
     notes?: string;
   }
-  
+
  export interface Program {
     id: string;
     name: string;
@@ -21,4 +21,3 @@ export interface Movement {
       notes: string;
     }>;
   }
-  

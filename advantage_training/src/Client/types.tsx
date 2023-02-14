@@ -31,10 +31,6 @@ export type Client = {
   movements?: Movement[];
   notesHistory?: Note[];
 };
-
-
-
-
   export interface Note {
     date: string;
     notes: string;
