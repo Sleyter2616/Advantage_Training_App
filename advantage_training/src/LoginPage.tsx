@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Typography, TextField, Button, Radio, FormControlLabel, RadioGroup } from '@material-ui/core';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,25 +31,42 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formType, setFormType] = useState('login');
+  const [result, setResult] = useState('');
   const history = useNavigate();
+
+  const auth = getAuth();
+
+  const handleLogin = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        history('/home');
+      })
+      .catch((error) => {
+        console.log('Login failed. Error:', error.message);
+        setResult(`Failed to login, ${error.message}`)
+      });
+  };
+
+  const handleCreateAccount = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        console.log(`Account created with email: ${email}, password: ${password}`);
+        setResult('Account created, You may now log in')
+      })
+      .catch((error) => {
+        console.log('Account creation failed. Error:', error.message);
+        setResult(`Failed to create Account, ${error.message}`)
+      });
+  };
 
   const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Simulate a successful login
     if (formType === 'login') {
-      if (email === 'test@example.com' && password === 'password') {
-        history('/home');
-      } else {
-        console.log('Login failed. Invalid username or password.');
-      }
+      handleLogin();
     } else {
-      console.log(`Creating account with email: ${email}, password: ${password}`);
+      handleCreateAccount();
     }
-
   };
-
-
-
 
   return (
     <Container className={classes.root}>
@@ -84,6 +102,7 @@ const LoginPage = () => {
           {formType === 'login' ? 'Login' : 'Create an Account'}
         </Button>
       </form>
+      <Typography>{result}</Typography>
     </Container>
   );
 };

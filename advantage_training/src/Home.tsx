@@ -5,6 +5,7 @@ import { Container, Typography, TableHead, TextField, Button, Table, TableRow, T
 import { useNavigate, Link } from 'react-router-dom';
 import ClientPage from './ClientPage';
 import { Client } from './Client/types';
+import { getAuth, signOut } from "firebase/auth";
 
 
 
@@ -131,6 +132,13 @@ const HomePage = () => {
     return client.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
   return (
   <Container className={classes.root}>
     <Typography variant="h5">Client Management</Typography>
@@ -165,7 +173,8 @@ const HomePage = () => {
           <TableCell>Weight</TableCell>
           <TableCell>Goals</TableCell>
           <TableCell>Notes</TableCell>
-          <TableCell>Program</TableCell>
+          <TableCell>Programs</TableCell>
+          <TableCell>Add New Program</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
