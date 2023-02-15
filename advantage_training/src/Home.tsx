@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Typography, TableHead, TextField, Button, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
@@ -6,51 +7,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import ClientPage from './ClientPage';
 import { Client } from './Client/types';
 import { getAuth, signOut } from "firebase/auth";
+import { getFirestore, doc, getDoc, collection, onSnapshot } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "./firebaseConfig";
+import type { DocumentData } from "firebase/firestore";
 
+const app = initializeApp(firebaseConfig);
 
-
-const evalSheetData = {
-  name: 'John Doe',
-  age: 28,
-  goals: 'Lose weight and build muscle',
-  notes: 'No injuries or health issues',
-  movements: [
-    {
-      name: 'Squat',
-      weight: '200',
-      sets: '3',
-      reps: '8'
-    },
-    {
-      name: 'Deadlift',
-      weight: '225',
-      sets: '3',
-      reps: '6'
-    },
-    {
-      name: 'Bench Press',
-      weight: '155',
-      sets: '3',
-      reps: '10'
-    },
-    {
-      name: 'Pull-up',
-      weight: '0',
-      sets: '3',
-      reps: '6'
-    }
-  ],
-  notesHistory: [
-    {
-      date: '2022-02-10',
-      notes: 'Client was feeling fatigued during workout'
-    },
-    {
-      date: '2022-02-07',
-      notes: 'Client was able to complete all sets and reps'
-    }
-  ]
-};
+const db = getFirestore(app);
+const usersRef = collection(db, 'users');
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
+  const auth = getAuth();
+  const [user, setUser] = useState<DocumentData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [clients, setClients] = useState([
     { id: '1', name: 'John Doe', dob: '01/01/1990', height: '180', weight: '80', goals: 'Lose weight', notes: 'None', program: 'Weight Loss' },
@@ -90,8 +57,8 @@ const HomePage = () => {
     goals: '',
     notes: '',
     program: '',
-    movements: evalSheetData.movements,
-    notesHistory: evalSheetData.notesHistory,
+    movements: {},
+    notesHistory: {}
   });
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -107,41 +74,31 @@ const HomePage = () => {
 
   };
 
-  const handleNewClientChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setNewClient((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleNewClientSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const newClientId = clients.length + 1;
-    const newClientWithId = {
-      ...newClient,
-      id: newClientId.toString(),
-      height: Number(newClient.height).toString(), // convert the height value to string
-      weight: Number(newClient.weight).toString(), // convert the weight value to string
-    };
-    setClients((prev) => [...prev, newClientWithId]);
-    navigate(`/clients/${newClientId}`);
-  };
-
   const filteredClients = clients.filter((client) => {
     return client.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-
-  const auth = getAuth();
-  signOut(auth).then(() => {
-    // Sign-out successful.
-  }).catch((error) => {
-    // An error happened.
-  });
+  // const auth = getAuth();
+  // signOut(auth).then(() => {
+  //   // Sign-out successful.
+  // }).catch((error) => {
+  //   // An error happened.
+  // });
+  useEffect(() => {
+    const unsubscribe = onSnapshot(usersRef, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          if (userData) {
+            setUser(userData);
+        }
+      });
+    });
+    return () => unsubscribe();
+  }, []);
   return (
   <Container className={classes.root}>
     <Typography variant="h5">Client Management</Typography>
+    {user && user.firstName && user.lastName &&(<Typography variant="h3">Welcome {user.firstName} {user.lastName}</Typography>)}
     <form className={classes.form} onSubmit={handleSearch}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <TextField
@@ -194,7 +151,6 @@ const HomePage = () => {
     </TableRow>
   ))}
 </TableBody>
-
     </Table>
   </Container>
 );
