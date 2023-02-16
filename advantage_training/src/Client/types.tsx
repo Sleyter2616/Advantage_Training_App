@@ -21,7 +21,8 @@ export interface Program {
 
 export type Client = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName:string
   dob: string;
   height: string;
   weight: string;

@@ -41,12 +41,13 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
 
   const [values, setValues] = useState({
     id: uuidv4(),
-    name: '',
+    firstName:'',
+    lastName: '',
     dob: '',
     height: '',
     weight: '',
     goals: '',
-    notes: '',
+    clientNotes: '',
     programs:[]
   });
 
@@ -54,10 +55,11 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
     const newClientWithId = { ...values, id: uuidv4() };
     onAddClient(newClientWithId);
     await setDoc(doc(db, "clients", newClientWithId.id), newClientWithId);
-    navigate(`/clients/${newClientWithId.id}/add-program`);
+    navigate(`/client/${newClientWithId.id}/add-program`);
   };
   const validationSchema = Yup.object({
-    name: Yup.string().required('Required'),
+    firstName: Yup.string().required('Required'),
+    lastName: Yup.string().required('Required'),
     dob: Yup.string().matches(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, 'Must be in the format MM/DD/YYYY')
     .required('Required'),
     height: Yup.string()
@@ -67,7 +69,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
       .required('Required')
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
-    notes: Yup.string().notRequired(),
+    clientNotes: Yup.string().notRequired(),
     programs:Yup.array()
   });
 
@@ -83,14 +85,25 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
           <Form className={classes.form}>
             <TextField
               className={classes.textField}
-              id="name"
-              label="Name (Required)"
-              name="name"
-              value={values.name}
+              id="firstName"
+              label="First Name (Required)"
+              name="firstName"
+              value={values.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.name && Boolean(errors.name)}
-              helperText={touched.name && errors.name}
+              error={touched.firstName && Boolean(errors.firstName)}
+              helperText={touched.firstName && errors.firstName}
+            />
+             <TextField
+              className={classes.textField}
+              id="lastName"
+              label="Last Name (Required)"
+              name="lastName"
+              value={values.lastName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.lastName && Boolean(errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
             />
             <TextField
               className={classes.textField}

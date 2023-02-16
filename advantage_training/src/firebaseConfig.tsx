@@ -16,3 +16,4 @@ export const firebaseConfig = {
  export const db = getFirestore(app);
 
  export const usersRef = collection(db, 'users');
+ export const clientsRef = collection(db,'clients')

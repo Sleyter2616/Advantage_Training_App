@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Program, Movement } from './types';
+import { Program, Movement,Client } from './types';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import { TextField, Button, Typography, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { clientsRef } from '../firebaseConfig';
+import { doc, onSnapshot } from 'firebase/firestore';
 interface AddProgramPageProps {
   onAddTrainingProgram: (trainingProgram: Program) => void;
 }
@@ -40,12 +41,10 @@ const days = ['Monday', 'Tuesday', 'Wednesday'];
 
 const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const clientName = location.state?.clientName;
-
+  const [client, setClient] = useState<Client | null>(null);
   const classes = useStyles();
-  const { clientId } = useParams();
-  const defaultClientId = clientId || ""; // set a default value of empty string if clientId is undefined
+  const { id } = useParams();
+  const defaultClientId = id || ""; // set a default value of empty string if clientId is undefined
   const [values, setValues] = useState<Program>({
     id: uuidv4(),
     clientId: defaultClientId,
@@ -54,11 +53,21 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
       { name: 'Day 1', movements: [{  name: '', weight: '0', sets: '0', reps: '0' }] },
     ],
   });
+  useEffect(() => {
+    const clientRef = doc(clientsRef, id);
+    const unsubscribe = onSnapshot(clientRef, (doc) => {
+        setClient(doc.data() as Client);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [id]);
+
 
   const handleSubmit = (values: Program) => {
     const newTrainingProgramWithId = { ...values, id: uuidv4() };
     onAddTrainingProgram(newTrainingProgramWithId);
-    navigate(`/clients/${clientId}`);
+    navigate(`/clients/${id}/programs`);
   };
 
   const validationSchema = Yup.object({
@@ -75,14 +84,16 @@ const AddProgram: React.FC<AddProgramPageProps> = ({ onAddTrainingProgram }) => 
     ).min(1),
   });
 
+
+
   return (
     <div>
       <Typography variant="h4" component="h1" align="center">
         Add New Training Program
       </Typography>
       <Typography variant="h5" component="h2" align="center">
-  {`Client: ${clientName}`}
-</Typography>
+      {client ? `Client: ${client.firstName} ${client.lastName}` : ''}
+      </Typography>
       <Formik
         initialValues={values}
         validationSchema={validationSchema}

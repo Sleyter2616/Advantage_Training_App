@@ -56,10 +56,10 @@ const ClientDisplay: React.FC<ClientProps> = ({ client }) => {
   const classes = useStyles();
   const navigate = useNavigate();
 const handleViewProgramClick = () => {
-  navigate(`/clients/${client.id}/programs`);
+  navigate(`/client/${client.id}/programs`);
 };
 const handleAddProgram = () => {
-  navigate(`/clients/${client.id}/add-program`);
+  navigate(`/client/${client.id}/add-program`);
 
 };
   const heightInInches = Math.round(parseInt(client.height));
