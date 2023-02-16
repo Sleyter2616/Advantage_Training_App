@@ -23,7 +23,11 @@ import {
   handleAddMovement
 } from "./helpers";
 import EditableText from "./EditableText";
-import { Program } from "../types";
+import { Program, Client } from "../types";
+import Header from "../../components/Header";
+import { clientsRef } from '../../firebaseConfig';
+import { doc, onSnapshot, DocumentReference, updateDoc } from 'firebase/firestore';
+
 
 interface ProgramsParams extends Record<string, string | undefined> {
   clientId: string;
@@ -49,6 +53,8 @@ const buttonStyle={
 
 const Programs = () => {
   const { clientId } = useParams<ProgramsParams>();
+  const clientRef:DocumentReference = doc(clientsRef, clientId);
+  const [client, setClient] = useState<Client | null>(null);
   const [programs, setPrograms] = useState<Array<Program>>([]);
   const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -58,105 +64,120 @@ const Programs = () => {
   }
 
   useEffect(() => {
-    // fetch the program data for the client from an API or a local store
-    const fetchedPrograms = [
-      {
-        id: "1",
-        clientId:'',
-        programName: "Weight Loss",
-        days: [
-          {
-            name: "Day 1",
-            movements: [
-              { name: "Squat", weight: "200", sets: "3", reps: "8" },
-              { name: "Deadlift", weight: "225", sets: "3", reps: "6" },
-              { name: "Bench Press", weight: "155", sets: "3", reps: "10" },
-              { name: "Pull-up", weight: "0", sets: "3", reps: "6" },
-            ],
-            notes: "Client was feeling fatigued during workout",
-          },
-          {
-            name: "Day 2",
-            movements: [
-              {
-                name: "Squat",
-                weight: "205",
-                sets: "3",
-                reps: "8",
-              },
-              {
-                name: "Deadlift",
-                weight: "235",
-                sets: "3",
-                reps: "6",
-              },
-              {
-                name: "Bench Press",
-                weight: "165",
-                sets: "3",
-                reps: "10",
-              },
-              {
-                name: "Pull-up",
-                weight: "0",
-                sets: "3",
-                reps: "6",
-              },
-            ],
-            notes: "",
-          },
-          {
-            name: "Day 3",
-            movements: [
-              {
-                name: "Squat",
-                weight: "235",
-                sets: "3",
-                reps: "8",
-              },
-              {
-                name: "Deadlift",
-                weight: "265",
-                sets: "3",
-                reps: "6",
-              },
-              {
-                name: "Bench Press",
-                weight: "185",
-                sets: "3",
-                reps: "10",
-              },
-              {
-                name: "Pull-up",
-                weight: "0",
-                sets: "3",
-                reps: "8",
-              },
-            ],
-            notes: "",
-          },
-        ],
-        notesHistory: [
-          {
-            date: "2022-02-10",
-            notes: "Client was feeling fatigued during workout",
-          },
-          {
-            date: "2022-02-07",
-            notes: "Client was able to complete all sets and reps",
-          },
-        ],
-      },
 
-    ];
-    setPrograms(fetchedPrograms);
-  }, [clientId]);
+    const unsubscribe = onSnapshot(clientRef, (doc) => {
+      const clientData = doc.data() as Client
+      const programsData =clientData.programs
+      setClient(clientData)
+      setPrograms(programsData);
+  });
+  return () => {
+    unsubscribe();
+  };
+}, [clientId]);
+//     // fetch the program data for the client from an API or a local store
+//     const fetchedPrograms = [
+//       {
+//         id: "1",
+//         clientId:'',
+//         programName: "Weight Loss",
+//         days: [
+//           {
+//             name: "Day 1",
+//             dayNotes:'',
+//             movements: [
+//               { name: "Squat", weight: "200", sets: "3", reps: "8" },
+//               { name: "Deadlift", weight: "225", sets: "3", reps: "6" },
+//               { name: "Bench Press", weight: "155", sets: "3", reps: "10" },
+//               { name: "Pull-up", weight: "0", sets: "3", reps: "6" },
+//             ],
+//             notes: "Client was feeling fatigued during workout",
+//           },
+//           {
+//             name: "Day 2",
+//             dayNotes:'',
+//             movements: [
+//               {
+//                 name: "Squat",
+//                 weight: "205",
+//                 sets: "3",
+//                 reps: "8",
+//               },
+//               {
+//                 name: "Deadlift",
+//                 weight: "235",
+//                 sets: "3",
+//                 reps: "6",
+//               },
+//               {
+//                 name: "Bench Press",
+//                 weight: "165",
+//                 sets: "3",
+//                 reps: "10",
+//               },
+//               {
+//                 name: "Pull-up",
+//                 weight: "0",
+//                 sets: "3",
+//                 reps: "6",
+//               },
+//             ],
+//             notes: "",
+//           },
+//           {
+//             name: "Day 3",
+//             dayNotes:'',
+//             movements: [
+//               {
+//                 name: "Squat",
+//                 weight: "235",
+//                 sets: "3",
+//                 reps: "8",
+//               },
+//               {
+//                 name: "Deadlift",
+//                 weight: "265",
+//                 sets: "3",
+//                 reps: "6",
+//               },
+//               {
+//                 name: "Bench Press",
+//                 weight: "185",
+//                 sets: "3",
+//                 reps: "10",
+//               },
+//               {
+//                 name: "Pull-up",
+//                 weight: "0",
+//                 sets: "3",
+//                 reps: "8",
+//               },
+//             ],
+//             notes: "",
+//           },
+//         ],
+//         notesHistory: [
+//           {
+//             date: "2022-02-10",
+//             notes: "Client was feeling fatigued during workout",
+//           },
+//           {
+//             date: "2022-02-07",
+//             notes: "Client was able to complete all sets and reps",
+//           },
+//         ],
+//       },
 
-  return (
+//     ];
+//     setPrograms(fetchedPrograms);
+//   }, [clientId]);
+
+  return (<>
+  <Header />
     <form onSubmit={handleSubmit}>
 
       <Typography variant="h3" align="center">
-        Programs for client {clientId}
+        Programs for client {client?.firstName} {client?.lastName}
       </Typography>
       {programs.map((program, programIndex) => (
         <React.Fragment key={program.id}>
@@ -321,6 +342,7 @@ const Programs = () => {
 
       ))}
     </form>
+    </>
   );
 
 };

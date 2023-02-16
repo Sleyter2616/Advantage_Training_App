@@ -8,6 +8,7 @@ import { Client, Movement } from './types';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Typography, Grid } from '@material-ui/core';
 import { db } from '../firebaseConfig';
+import Header from '../components/Header';
 const useStyles = makeStyles({
   form: {
     display: 'flex',
@@ -75,6 +76,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
 
   return (
     <div>
+      <Header/>
       <Typography variant="h4" component="h1" align="center">Add New Client</Typography>
       <Formik
         initialValues={values}

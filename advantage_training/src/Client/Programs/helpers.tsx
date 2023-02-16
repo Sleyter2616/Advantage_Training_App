@@ -10,6 +10,7 @@ export const handleProgramNameChange = (id: string, newName: string,
       )
     );
   };
+
   export const handleAddDay = (programId: string,
     programs: Program[],
     setPrograms: React.Dispatch<React.SetStateAction<Program[]>>) => {
@@ -23,6 +24,7 @@ export const handleProgramNameChange = (id: string, newName: string,
                 {
                   name: `Day ${program.days.length + 1}`,
                   movements: [],
+                  dayNotes:''
                 },
               ],
             }

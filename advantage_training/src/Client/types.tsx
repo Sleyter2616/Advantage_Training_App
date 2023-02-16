@@ -8,12 +8,11 @@ export interface Movement {
 export interface Day {
   name: string;
   movements: Movement[];
-  dayNotes?: string;
+  dayNotes: string;
 }
 
 export interface Program {
   id: string;
-  clientId: string;
   programName: string;
   programNotes?:string
   days: Day[];
