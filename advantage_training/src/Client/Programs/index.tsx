@@ -23,6 +23,7 @@ import {
   handleAddMovement
 } from "./helpers";
 import EditableText from "./EditableText";
+import { Program } from "../types";
 
 interface ProgramsParams extends Record<string, string | undefined> {
   clientId: string;
@@ -41,15 +42,7 @@ interface Day {
   notes?: string;
 }
 
-interface Program {
-  id: string;
-  name: string;
-  days: Day[];
-  notesHistory: Array<{
-    date: string;
-    notes: string;
-  }>;
-}
+
 const buttonStyle={
     margin:'12px'
 }
@@ -69,7 +62,8 @@ const Programs = () => {
     const fetchedPrograms = [
       {
         id: "1",
-        name: "Weight Loss",
+        clientId:'',
+        programName: "Weight Loss",
         days: [
           {
             name: "Day 1",
@@ -153,114 +147,9 @@ const Programs = () => {
           },
         ],
       },
-      {
-        id: "2",
-        name: "Muscle Building",
-        days: [
-          {
-            name: "Day 1",
-            movements: [
-              {
-                name    : "Squat",
-                weight: "225",
-                sets: "3",
-                reps: "8",
-              },
-              {
-                name: "Deadlift",
-                weight: "245",
-                sets: "3",
-                reps: "6",
-              },
-              {
-                name: "Bench Press",
-                weight: "165",
-                sets: "3",
-                reps: "10",
-              },
-              {
-                name: "Pull-up",
-                weight: "0",
-                sets: "3",
-                reps: "8",
-              },
-            ],
-            notes: "",
-          },
-          {
-            name: "Day 2",
-            movements: [
-              {
-                name: "Squat",
-                weight: "235",
-                sets: "3",
-                reps: "8",
-              },
-              {
-                name: "Deadlift",
-                weight: "265",
-                sets: "3",
-                reps: "6",
-              },
-              {
-                name: "Bench Press",
-                weight: "185",
-                sets: "3",
-                reps: "10",
-              },
-              {
-                name: "Pull-up",
-                weight: "0",
-                sets: "3",
-                reps: "8",
-              },
-            ],
-            notes: "",
-          },
-          {
-            name: "Day 3",
-            movements: [
-              {
-                name: "Squat",
-                weight: "235",
-                sets: "3",
-                reps: "8",
-              },
-              {
-                name: "Deadlift",
-                weight: "265",
-                sets: "3",
-                reps: "6",
-              },
-              {
-                name: "Bench Press",
-                weight: "185",
-                sets: "3",
-                reps: "10",
-              },
-              {
-                name: "Pull-up",
-                weight: "0",
-                sets: "3",
-                reps: "8",
-              },
-            ],
-            notes: "",
-          },
-        ],
-        notesHistory: [
-          {
-            date: "2022-02-12",
-            notes: "Client was feeling sore after workout",
-          },
-          {
-            date: "2022-02-09",
-            notes: "Client had no issues during workout",
-          },
-        ],
-      },
+
     ];
-    setPrograms(fetchedPrograms.filter((program) => program.id === clientId));
+    setPrograms(fetchedPrograms);
   }, [clientId]);
 
   return (
@@ -277,7 +166,7 @@ const Programs = () => {
           </Typography>
           <Typography variant="h6" align="center">
             <EditableText
-              value={program.name}
+              value={program.programName}
               onChange={(newName:string) => handleProgramNameChange(program.id, newName, programs, setPrograms)}
             />
           </Typography>
@@ -401,7 +290,7 @@ const Programs = () => {
                 </Typography>
                 <Typography  align="center">
          <EditableText
-                  value={day.notes ? day.notes :''}
+                  value={day.dayNotes ? day.dayNotes :''}
                   onChange={(newNotes:string) =>
                     handleDayNotesChange(program.id, dayIndex, newNotes, programs, setPrograms)
                   }
@@ -420,7 +309,7 @@ const Programs = () => {
             color="primary"
             onClick={() => handleAddDay(program.id, programs, setPrograms)}
           >
-            Add Day to program "{program.name}"
+            Add Day to program "{program.programName}"
           </Button>
           </Typography>
           <Typography align="center">

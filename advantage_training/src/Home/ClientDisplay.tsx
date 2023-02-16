@@ -59,7 +59,7 @@ const handleViewProgramClick = () => {
   navigate(`/clients/${client.id}/programs`);
 };
 const handleAddProgram = () => {
-  navigate(`/clients/${client.id}/add-program/${client.name}`);
+  navigate(`/clients/${client.id}/add-program`);
 
 };
   const heightInInches = Math.round(parseInt(client.height));

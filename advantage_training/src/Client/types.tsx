@@ -1,21 +1,22 @@
 
 export interface Movement {
-  id: string;
   name: string;
-  weight: number;
-  sets: number;
-  reps: number;
+  weight: string;
+  sets: string;
+  reps: string;
+}
+export interface Day {
+  name: string;
+  movements: Movement[];
+  dayNotes?: string;
 }
 
-export interface TrainingProgram {
+export interface Program {
   id: string;
   clientId: string;
   programName: string;
-  program: {
-    day: string;
-    movements: Movement[];
-    notes?: string
-  }[];
+  programNotes?:string
+  days: Day[];
 }
 
 export type Client = {
@@ -25,18 +26,6 @@ export type Client = {
   height: string;
   weight: string;
   goals: string;
-  notes?: string;
-  program?: string;
-  trainingProgram?: TrainingProgram[];
-  movements?: Movement[];
-  notesHistory?: Note[];
+  clientNotes?: string;
+  programs:Program[];
 };
-  export interface Note {
-    date: string;
-    notes: string;
-  }
-
- export interface TrainingProgramDayErrors {
-    day?: string;
-    movements?: { name?: string; weight?: number; sets?: number; reps?: number; }[];
-  }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-
+import {  doc, setDoc } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Client, Movement } from './types';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Typography, Grid } from '@material-ui/core';
-
+import { db } from '../firebaseConfig';
 const useStyles = makeStyles({
   form: {
     display: 'flex',
@@ -47,16 +47,19 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
     weight: '',
     goals: '',
     notes: '',
+    programs:[]
   });
 
-  const handleSubmit = (values: Client) => {
+  const handleSubmit = async (values: Client) => {
     const newClientWithId = { ...values, id: uuidv4() };
     onAddClient(newClientWithId);
-    navigate(`/clients/${newClientWithId.id}`);
+    await setDoc(doc(db, "clients", newClientWithId.id), newClientWithId);
+    navigate(`/clients/${newClientWithId.id}/add-program`);
   };
   const validationSchema = Yup.object({
     name: Yup.string().required('Required'),
-    dob: Yup.string().matches(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, 'Must be in the format MM/DD/YYYY'),
+    dob: Yup.string().matches(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, 'Must be in the format MM/DD/YYYY')
+    .required('Required'),
     height: Yup.string()
       .matches(/^[1-9][0-9]*$/, 'Must be a valid number of inches')
       .required('Required'),
@@ -65,7 +68,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
     notes: Yup.string().notRequired(),
-
+    programs:Yup.array()
   });
 
   return (
@@ -81,7 +84,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             <TextField
               className={classes.textField}
               id="name"
-              label="Name"
+              label="Name (Required)"
               name="name"
               value={values.name}
               onChange={handleChange}
@@ -92,7 +95,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             <TextField
               className={classes.textField}
               id="dob"
-              label="Date of Birth"
+              label="Date of Birth (Required)"
               name="dob"
               value={values.dob}
               onChange={handleChange}
@@ -101,7 +104,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             <TextField
               className={classes.textField}
               id="height"
-              label="Height (in)"
+              label="Height (in) (Required)"
               name="height"
               type="text"
               value={values.height}
@@ -113,7 +116,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             <TextField
               className={classes.textField}
               id="weight"
-              label="Weight (lbs)"
+              label="Weight (lbs) (Required)"
               name="weight"
               type="text"
               value={values.weight}
@@ -125,7 +128,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             <TextField
               className={classes.textField}
               id="goals"
-              label="Goals"
+              label="Goals (Required)"
               name="goals"
               value={values.goals}
               onChange={handleChange}
@@ -135,14 +138,14 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             />
             <TextField
               className={classes.textField}
-              id="notes"
-              label="Notes"
-              name="notes"
-              value={values.notes}
+              id="clientNotes"
+              label="Client Notes (Optional)"
+              name="clientNotes"
+              value={values.clientNotes}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.notes && Boolean(errors.notes)}
-              helperText={touched.notes && errors.notes}
+              error={touched.clientNotes && Boolean(errors.clientNotes)}
+              helperText={touched.clientNotes && errors.clientNotes}
             />
       <Button className={classes.button} type="submit" variant="contained">
         Add Client and Create Programs

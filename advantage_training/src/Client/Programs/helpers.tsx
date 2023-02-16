@@ -1,4 +1,4 @@
-import { Program, Day, Movement } from "./types";
+import { Program, Day, Movement } from "../types";
 
 
 export const handleProgramNameChange = (id: string, newName: string,
@@ -47,14 +47,14 @@ export const handleProgramNameChange = (id: string, newName: string,
   export const handleDayNotesChange = (
     programId: string,
     dayIndex: number,
-    newNotes: string,  programs: Program[],
+    newDayNotes: string,  programs: Program[],
     setPrograms: React.Dispatch<React.SetStateAction<Program[]>>
   ) => {
     setPrograms((prevPrograms) =>
       prevPrograms.map((program) => {
         if (program.id === programId) {
           const days = [...program.days];
-          days[dayIndex] = { ...days[dayIndex], notes: newNotes };
+          days[dayIndex] = { ...days[dayIndex], dayNotes: newDayNotes };
           return { ...program, days };
         }
         return program;
