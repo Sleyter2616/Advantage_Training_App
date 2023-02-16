@@ -31,14 +31,11 @@ const useStyles = makeStyles({
   },
 });
 
-const days = ['Monday', 'Tuesday', 'Wednesday', ];
-
 interface AddClientPageProps {
-  clients: Client[];
   onAddClient: (client: Client) => void;
 }
 
-const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) => {
+const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -148,7 +145,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient, clients }) =
               helperText={touched.notes && errors.notes}
             />
       <Button className={classes.button} type="submit" variant="contained">
-        Add Client
+        Add Client and Create Programs
       </Button>
     </Form>
   )}

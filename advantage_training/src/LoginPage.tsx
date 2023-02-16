@@ -5,6 +5,8 @@ import { Formik, Form, Field,FormikHelpers } from 'formik';
 import { Container, Typography, TextField, Button, Radio, FormControlLabel, RadioGroup } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { setDoc, collection , getDoc, doc} from 'firebase/firestore';
+import { db} from "./firebaseConfig";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,16 +51,29 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
 
   const handleLogin = (email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        const user = {
-          email: email,
-          firstName: '',
-          lastName: ''
-        };
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userData', JSON.stringify(user));
-        onLogin();
-        navigate('/home');
+      .then(async () => {
+        const userAuth = auth.currentUser;
+        if (userAuth) {
+          const userDoc = await getDoc(doc(db, 'users', userAuth.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const user = {
+              email: userData.email,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              uid: userAuth.uid
+            };
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userData', JSON.stringify(user));
+            onLogin();
+            navigate('/home');
+          } else {
+            console.log('User data not found');
+            setStatus('User data not found');
+          }
+        } else {
+          console.log('User not authenticated');
+        }
       })
       .catch((error) => {
         console.log('Login failed. Error:', error.message);
@@ -66,33 +81,37 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
       });
   };
 
-  const handleCreateAccount = (email: string, password: string) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        console.log(`Account created with email: ${email}`);
-        setStatus('Account created, You may now log in');
-        const user = {
+  const handleCreateAccount = async (email: string, password: string, firstName: string, lastName: string) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      if (user) {
+        const docRef = doc(db, 'users', user.uid);
+        await setDoc(docRef, {
           email: email,
-          firstName: '',
-          lastName: ''
-        };
-        onLogin();
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userData', JSON.stringify(user));
-        navigate('/home');
-      })
-      .catch((error) => {
-        console.log('Account creation failed. Error:', error.message);
-        setStatus(`Failed to create Account, ${error.message}`);
-      });
+          firstName: firstName,
+          lastName: lastName,
+          uid: user.uid
+        });
+        console.log('Document written with ID: ', docRef.id);
+        setStatus('Account created, You may now log in');
+        setFormType('login')
+      }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.error('Error creating user: ', e);
+        setStatus(`Failed to create Account, ${e.message}`);
+      }
+    }
   };
-  
+
+
   const handleSubmit = (values: Trainer, formikHelpers: FormikHelpers<Trainer>) => {
     const { resetForm } = formikHelpers;
     if (formType === 'login') {
       handleLogin(values.email, values.password);
     } else {
-      handleCreateAccount(values.email, values.password);
+      handleCreateAccount(values.email, values.password, values.firstName, values.lastName);
       resetForm();
     }
   };
@@ -175,7 +194,6 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
               variant="contained"
               fullWidth
               type="submit"
-              disabled={formik.isSubmitting}
             >
               Login
             </Button>
@@ -241,9 +259,8 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
                variant="contained"
                fullWidth
                type="submit"
-               disabled={formik.isSubmitting}
              >
-               Login
+              Create an Account
              </Button>
              {status && <Typography color="error">{status}</Typography>}
            </Form>

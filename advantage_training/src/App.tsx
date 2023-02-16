@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage onLogin={() => setIsLoggedIn(true)} />} />
         <Route  path="/home" element={<Home />} />
-        <Route path="/add-client" element={<AddClientPage clients={[]} onAddClient={(client) => console.log(client)} />} />
+        <Route path="/add-client" element={<AddClientPage onAddClient={(client) => console.log(client)} />} />
         <Route path="/clients/:id/add-program/:name" element={<AddProgram onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />} />
         <Route  path="/clients/:clientId/programs" element={<Programs />} />
        </Routes>
