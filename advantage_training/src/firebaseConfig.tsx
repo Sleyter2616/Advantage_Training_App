@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, collection, onSnapshot } from "firebase/firestore";
+import { getFirestore, collection, } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 
 export const firebaseConfig = {

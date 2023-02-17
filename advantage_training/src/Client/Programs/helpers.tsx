@@ -1,4 +1,4 @@
-import { Program, Day, Movement } from "../types";
+import { Program } from "../types";
 
 
 export const handleProgramNameChange = (id: string, newName: string,
@@ -22,7 +22,7 @@ export const handleProgramNameChange = (id: string, newName: string,
               days: [
                 ...program.days,
                 {
-                  name: `Day ${program.days.length + 1}`,
+                  dayName: `Day ${program.days.length + 1}`,
                   movements: [],
                   dayNotes:''
                 },
@@ -38,7 +38,7 @@ export const handleProgramNameChange = (id: string, newName: string,
       const updatedPrograms = prevPrograms.map((program) => {
         if (program.id === programId) {
           const updatedDays = [...program.days];
-          updatedDays[dayIndex] = { ...updatedDays[dayIndex], name: newName };
+          updatedDays[dayIndex] = { ...updatedDays[dayIndex], dayName: newName };
           return { ...program, days: updatedDays };
         }
         return program;
@@ -220,7 +220,7 @@ export const handleProgramNameChange = (id: string, newName: string,
         const updatedMovements = [
           ...day.movements,
           {
-            name: "",
+            movementName: "",
             weight: "",
             sets: "",
             reps: "",

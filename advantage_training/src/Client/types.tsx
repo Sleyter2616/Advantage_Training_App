@@ -1,14 +1,14 @@
 
 export interface Movement {
-  name: string;
+  movementName: string;
   weight: string;
   sets: string;
   reps: string;
 }
 export interface Day {
-  name: string;
-  movements: Movement[];
+  dayName: string;
   dayNotes: string;
+  movements: Movement[];
 }
 
 export interface Program {

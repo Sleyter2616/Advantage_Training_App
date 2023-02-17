@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Typography, TableHead, TextField, Button, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
@@ -46,17 +45,6 @@ const HomePage = () => {
     { id: '3', name: 'Jim Smith', dob: '03/03/2000', height: '175', weight: '75', goals: 'Improve strength', notes: 'Has knee injury'},
   ]);
   const navigate = useNavigate();
-  const [newClient, setNewClient] = useState({
-    id: uuidv4(),
-    name: '',
-    dob: '',
-    height: '',
-    weight: '',
-    goals: '',
-    notes: '',
-    movements: {},
-    notesHistory: {}
-  });
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

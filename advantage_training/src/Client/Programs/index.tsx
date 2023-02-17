@@ -26,26 +26,12 @@ import EditableText from "./EditableText";
 import { Program, Client } from "../types";
 import Header from "../../components/Header";
 import { clientsRef } from '../../firebaseConfig';
-import { doc, onSnapshot, DocumentReference, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, DocumentReference } from 'firebase/firestore';
 
 
 interface ProgramsParams extends Record<string, string | undefined> {
   clientId: string;
 }
-
-interface Movement {
-  name: string;
-  weight: string;
-  sets: string;
-  reps: string;
-}
-
-interface Day {
-  name: string;
-  movements: Movement[];
-  notes?: string;
-}
-
 
 const buttonStyle={
     margin:'12px'
@@ -56,7 +42,7 @@ const Programs = () => {
   const clientRef:DocumentReference = doc(clientsRef, clientId);
   const [client, setClient] = useState<Client | null>(null);
   const [programs, setPrograms] = useState<Array<Program>>([]);
-  const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
+  // const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // send the program data to the backend
@@ -75,102 +61,6 @@ const Programs = () => {
     unsubscribe();
   };
 }, [clientId]);
-//     // fetch the program data for the client from an API or a local store
-//     const fetchedPrograms = [
-//       {
-//         id: "1",
-//         clientId:'',
-//         programName: "Weight Loss",
-//         days: [
-//           {
-//             name: "Day 1",
-//             dayNotes:'',
-//             movements: [
-//               { name: "Squat", weight: "200", sets: "3", reps: "8" },
-//               { name: "Deadlift", weight: "225", sets: "3", reps: "6" },
-//               { name: "Bench Press", weight: "155", sets: "3", reps: "10" },
-//               { name: "Pull-up", weight: "0", sets: "3", reps: "6" },
-//             ],
-//             notes: "Client was feeling fatigued during workout",
-//           },
-//           {
-//             name: "Day 2",
-//             dayNotes:'',
-//             movements: [
-//               {
-//                 name: "Squat",
-//                 weight: "205",
-//                 sets: "3",
-//                 reps: "8",
-//               },
-//               {
-//                 name: "Deadlift",
-//                 weight: "235",
-//                 sets: "3",
-//                 reps: "6",
-//               },
-//               {
-//                 name: "Bench Press",
-//                 weight: "165",
-//                 sets: "3",
-//                 reps: "10",
-//               },
-//               {
-//                 name: "Pull-up",
-//                 weight: "0",
-//                 sets: "3",
-//                 reps: "6",
-//               },
-//             ],
-//             notes: "",
-//           },
-//           {
-//             name: "Day 3",
-//             dayNotes:'',
-//             movements: [
-//               {
-//                 name: "Squat",
-//                 weight: "235",
-//                 sets: "3",
-//                 reps: "8",
-//               },
-//               {
-//                 name: "Deadlift",
-//                 weight: "265",
-//                 sets: "3",
-//                 reps: "6",
-//               },
-//               {
-//                 name: "Bench Press",
-//                 weight: "185",
-//                 sets: "3",
-//                 reps: "10",
-//               },
-//               {
-//                 name: "Pull-up",
-//                 weight: "0",
-//                 sets: "3",
-//                 reps: "8",
-//               },
-//             ],
-//             notes: "",
-//           },
-//         ],
-//         notesHistory: [
-//           {
-//             date: "2022-02-10",
-//             notes: "Client was feeling fatigued during workout",
-//           },
-//           {
-//             date: "2022-02-07",
-//             notes: "Client was able to complete all sets and reps",
-//           },
-//         ],
-//       },
-
-//     ];
-//     setPrograms(fetchedPrograms);
-//   }, [clientId]);
 
   return (<>
   <Header />
@@ -195,7 +85,7 @@ const Programs = () => {
             <div key={dayIndex}>
               <Typography variant="h5" align="center">
                 <EditableText
-                  value={day.name}
+                  value={day.dayName}
                   onChange={(newName:string) =>
                     handleDayNameChange(program.id, dayIndex, newName, programs, setPrograms)
                   }
@@ -216,7 +106,7 @@ const Programs = () => {
                     <TableRow key={movementIndex}>
                       <TableCell>
                         <EditableText
-                          value={movement.name}
+                          value={movement.movementName}
                           onChange={(newName:string) =>
                             handleMovementNameChange(
                               program.id,
@@ -295,7 +185,7 @@ const Programs = () => {
                 color="secondary"
                 onClick={() => handleDeleteDay(program.id, dayIndex, programs, setPrograms)}
               >
-                Delete {day.name}
+                Delete {day.dayName}
               </Button>
               <Button
                style={buttonStyle}
@@ -303,7 +193,7 @@ const Programs = () => {
                 color="primary"
                 onClick={() => handleAddMovement(program.id, dayIndex, programs, setPrograms)}
               >
-                Add Exercise to {day.name}
+                Add Movement to {day.dayName}
               </Button>
               </Typography>
               <Typography variant="h6" align="center">

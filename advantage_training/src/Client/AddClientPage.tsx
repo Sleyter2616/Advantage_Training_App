@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {  doc, setDoc } from "firebase/firestore";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Client, Movement } from './types';
+import { Client } from './types';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Typography, Grid } from '@material-ui/core';
+import { TextField, Button, Typography } from '@material-ui/core';
 import { db } from '../firebaseConfig';
 import Header from '../components/Header';
 const useStyles = makeStyles({

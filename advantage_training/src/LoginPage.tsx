@@ -1,11 +1,11 @@
 import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import * as Yup from 'yup';
-import { Formik, Form, Field,FormikHelpers } from 'formik';
+import { Formik, Form,FormikHelpers } from 'formik';
 import { Container, Typography, TextField, Button, Radio, FormControlLabel, RadioGroup } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { setDoc, collection , getDoc, doc} from 'firebase/firestore';
+import { setDoc , getDoc, doc} from 'firebase/firestore';
 import { db} from "./firebaseConfig";
 
 const useStyles = makeStyles((theme) => ({
