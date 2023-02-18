@@ -6,7 +6,7 @@ import { Container, Typography, TextField, Button, Radio, FormControlLabel, Radi
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc , getDoc, doc} from 'firebase/firestore';
-import { db} from "./firebaseConfig";
+import { db} from "../firebaseConfig";
 
 const useStyles = makeStyles((theme) => ({
   root: {

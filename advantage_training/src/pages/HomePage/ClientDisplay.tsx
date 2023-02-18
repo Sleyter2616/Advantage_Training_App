@@ -1,19 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {  TableCell, Button } from '@material-ui/core';
-
+import {  Program} from '../../Client/types';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface ClientProps {
   client: {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     dob: string;
     height: string;
     weight: string;
     goals: string;
-    notes: string;
-    // programs?: Program[];
+    clientNotes?: string;
+    programs: Program[];
 
   };
 }
@@ -64,18 +65,19 @@ const handleAddProgram = () => {
 };
   const heightInInches = Math.round(parseInt(client.height));
   const weightInLbs = Math.round(parseInt(client.weight));
-
+const clientName = `${client.firstName} ${client.lastName}`
+console.log(client)
   return (
    <>
-      <TableCell>{client.name}</TableCell>
+      <TableCell>{clientName}</TableCell>
       <TableCell>{calculateAge(client.dob)}</TableCell>
       <TableCell>{heightInInches} in</TableCell>
       <TableCell>{formatNumber(weightInLbs)} lbs</TableCell>
       <TableCell>{client.goals}</TableCell>
-      <TableCell>{client.notes}</TableCell>
-      <TableCell>    <Button variant="contained" color="primary"   className={classes.submit} onClick={handleViewProgramClick}>
+      <TableCell>{client.clientNotes}</TableCell>
+      <TableCell> {client.programs?.length > 0 ?(   <Button variant="contained" color="primary"   className={classes.submit} onClick={handleViewProgramClick}>
       View/Edit Programs
-    </Button></TableCell>
+    </Button>):'No programs created yet'}</TableCell>
     <TableCell>
         <Button
           variant="contained"
@@ -83,7 +85,7 @@ const handleAddProgram = () => {
           className={classes.submit}
           onClick={handleAddProgram}
         >
-          Add Program for {client.name}
+          Add New Program
         </Button>
       </TableCell>
    </>

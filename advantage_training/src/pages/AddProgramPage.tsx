@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Program, Client, } from "./types";
+import { Program, Client, } from "../Client/types";
 import { Formik, Form } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddProgram: React.FC<AddProgramPageProps> = ({
+const AddProgramPage: React.FC<AddProgramPageProps> = ({
   onAddTrainingProgram,
 }) => {
   const navigate = useNavigate();
@@ -406,4 +406,4 @@ const AddProgram: React.FC<AddProgramPageProps> = ({
   );
 };
 
-export default AddProgram;
+export default AddProgramPage;

@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Client } from './types';
+import { Client } from '../Client/types';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Typography } from '@material-ui/core';
 import { db } from '../firebaseConfig';
@@ -115,6 +115,8 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
               value={values.dob}
               onChange={handleChange}
               onBlur={handleBlur}
+              error={touched.dob && Boolean(errors.dob)}
+              helperText={touched.dob && errors.dob}
             />
             <TextField
               className={classes.textField}

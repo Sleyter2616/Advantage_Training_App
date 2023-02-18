@@ -1,4 +1,4 @@
-import { Program } from "../types";
+import { Program } from "../../Client/types";
 
 
 export const handleProgramNameChange = (id: string, newName: string,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import LoginPage from './LoginPage';
-import Home from './Home';
-import AddClientPage from './Client/AddClientPage';
-import AddProgram from './Client/AddProgram';
-import Programs from './Client/Programs';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import AddClientPage from './pages/AddClientPage';
+import AddProgramPage from './pages/AddProgramPage';
+import ViewProgramsPage from './pages/Programs/ViewProgramsPage';
+import EditProgramPage from './pages/Programs/EditProgramPage';
 import { getAuth } from 'firebase/auth';
 
 function App() {
@@ -29,10 +30,11 @@ function App() {
       {isLoggedIn ? (
         <Routes>
           <Route path="/" element={<LoginPage onLogin={() => setIsLoggedIn(true)} />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/add-client" element={<AddClientPage onAddClient={(client) => console.log(client)} />} />
-          <Route path="/client/:id/add-program" element={<AddProgram onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />} />
-          <Route path="/client/:clientId/programs" element={<Programs />} />
+          <Route path="/client/:id/add-program" element={<AddProgramPage onAddTrainingProgram={(trainingProgram) => console.log(trainingProgram)} />} />
+          <Route path="/client/:clientId/programs" element={<ViewProgramsPage />} />
+          <Route path="/client/:clientId/edit-program/:programId" element={<EditProgramPage />} />
         </Routes>
       ) : (
         <Routes>
