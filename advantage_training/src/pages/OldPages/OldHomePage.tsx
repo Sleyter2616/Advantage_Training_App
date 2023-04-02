@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Typography, TableHead, TextField, Button, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-import MemberDisplay from './MemberDisplay';
+import ClientDisplay from './ClientDisplay';
 import { getAuth, signOut } from "firebase/auth";
 import {  onSnapshot } from "firebase/firestore";
-import { membersRef, usersRef} from "../../firebaseConfig";
+import { clientsRef, usersRef} from "../../firebaseConfig";
 import type { DocumentData } from "firebase/firestore";
-import { Member } from '../../types';
+import { Client } from '../../types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,17 +38,16 @@ const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState<DocumentData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [members, setMembers] = useState<Member[]>([{
+  const [clients, setClients] = useState<Client[]>([{
     id: '',
     firstName:'',
     lastName: '',
-    dob: undefined,
-    height: undefined,
-    weight: undefined,
+    dob: '',
+    height: '',
+    weight: '',
     goals: '',
-    memberNotes: '',
-    movementsScreen:[],
-    history:[]
+    clientNotes: '',
+    programs:[]
   }
   ]);
   const navigate = useNavigate();
@@ -58,22 +57,22 @@ const HomePage = () => {
     console.log(`Searching for: ${searchTerm}`);
   };
 
-  const handleAddMember = () => {
-    navigate('/add-member');
+  const handleAddClient = () => {
+    navigate('/add-client');
   };
 
-  const filteredMembers = members.filter((member) => {
-    const memberName = `${member.firstName} ${member.lastName}`
-    return memberName.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredClients = clients.filter((client) => {
+    const clientName = `${client.firstName} ${client.lastName}`
+    return clientName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(membersRef, (querySnapshot) => {
-      const members: Member[] = [];
+    const unsubscribe = onSnapshot(clientsRef, (querySnapshot) => {
+      const clients: Client[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data) {
-          members.push({
+          clients.push({
             id: doc.id,
             firstName: data.firstName,
             lastName: data.lastName,
@@ -81,13 +80,12 @@ const HomePage = () => {
             height: data.height,
             weight: data.weight,
             goals: data.goals,
-            memberNotes: data.memberNotes,
-            movementsScreen: data.movementsScreen || [],
-            history:data.history || []
+            clientNotes: data.notes,
+            programs: data.programs || []
           });
         }
       });
-      setMembers(members);
+      setClients(clients);
     });
     const unsubscribeUser = onSnapshot(usersRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -104,12 +102,12 @@ const HomePage = () => {
 
   return (
     <Container className={classes.root}>
-      <Typography variant="h5">Member Management</Typography>
+      <Typography variant="h5">Client Management</Typography>
       {user && user.firstName && user.lastName && (<Typography variant="h3">Welcome {user.firstName} {user.lastName}</Typography>)}
       <form className={classes.form} onSubmit={handleSearch}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
-            label="Search for Member By Name"
+            label="Search for Client By Name"
             variant="outlined"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
@@ -123,9 +121,9 @@ const HomePage = () => {
           variant="contained"
           color="primary"
           className={classes.submit}
-          onClick={handleAddMember}
+          onClick={handleAddClient}
         >
-          Add New Member
+          Add New Client
         </Button>
       </div>
       <Table className={classes.table}>
@@ -137,14 +135,14 @@ const HomePage = () => {
             <TableCell>Weight (lbs)</TableCell>
             <TableCell>Goals</TableCell>
             <TableCell>Notes</TableCell>
-            <TableCell>Member Screen</TableCell>
-            <TableCell>Member History</TableCell>
+            <TableCell>Programs</TableCell>
+            <TableCell>Add New Program</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredMembers.map((member) => (
-            <TableRow key={member.id}>
-              <MemberDisplay member={member} />
+          {filteredClients.map((client) => (
+            <TableRow key={client.id}>
+              <ClientDisplay client={client} />
             </TableRow>
           ))}
         </TableBody>

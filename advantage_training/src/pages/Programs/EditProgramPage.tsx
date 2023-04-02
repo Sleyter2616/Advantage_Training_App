@@ -18,7 +18,7 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { v4 as uuidv4 } from "uuid";
-import { Program, Day, Movement } from "../../Client/types";
+import { Program, Day, Movement } from "../../types";
 import { doc, getDoc, setDoc ,  DocumentReference,} from "firebase/firestore";
 import { db, clientsRef } from "../../firebaseConfig";
 import Header from "../../components/Header";

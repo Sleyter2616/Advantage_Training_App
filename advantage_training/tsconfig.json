@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "suppressImplicitAnyIndexErrors": true,
     "target": "es5",
     "lib": [
       "dom",
@@ -19,7 +20,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
+    
   },
+  
   "include": [
     "src"
   ]

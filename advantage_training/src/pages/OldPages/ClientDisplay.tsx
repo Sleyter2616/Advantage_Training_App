@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {  TableCell, Button } from '@material-ui/core';
-import {  Program} from '../../Client/types';
+import {  Program} from '../../types';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface ClientProps {

@@ -17,3 +17,4 @@ export const firebaseConfig = {
 
  export const usersRef = collection(db, 'users');
  export const clientsRef = collection(db,'clients')
+ export const membersRef = collection(db,'members')

@@ -4,11 +4,11 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { Client } from '../Client/types';
+import { Member } from '../../types';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Typography } from '@material-ui/core';
-import { db } from '../firebaseConfig';
-import Header from '../components/Header';
+import { db } from '../../firebaseConfig';
+import Header from '../../components/Header';
 const useStyles = makeStyles({
   form: {
     display: 'flex',
@@ -32,11 +32,11 @@ const useStyles = makeStyles({
   },
 });
 
-interface AddClientPageProps {
-  onAddClient: (client: Client) => void;
+interface AddMemberPageProps {
+  onAddMember: (member: Member) => void;
 }
 
-const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
+const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -44,40 +44,37 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
     id: uuidv4(),
     firstName:'',
     lastName: '',
-    dob: '',
-    height: '',
-    weight: '',
+    dob: undefined,
+    height: undefined,
+    weight: undefined,
     goals: '',
-    clientNotes: '',
-    programs:[]
+    memberNotes: '',
+    movementsScreen:[],
+    history:[]
   });
 
-  const handleSubmit = async (values: Client) => {
-    const newClientWithId = { ...values, id: uuidv4() };
-    onAddClient(newClientWithId);
-    await setDoc(doc(db, "clients", newClientWithId.id), newClientWithId);
-    navigate(`/client/${newClientWithId.id}/add-program`);
+  const handleSubmit = async (values: Member) => {
+    const newMemberWithId = { ...values, id: uuidv4() };
+    onAddMember(newMemberWithId);
+    await setDoc(doc(db, "members", newMemberWithId.id), newMemberWithId);
+    navigate(`/member/${newMemberWithId.id}/add-movement-screen`);
   };
   const validationSchema = Yup.object({
     firstName: Yup.string().required('Required'),
     lastName: Yup.string().required('Required'),
-    dob: Yup.string().matches(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, 'Must be in the format MM/DD/YYYY')
-    .required('Required'),
-    height: Yup.string()
-      .matches(/^[1-9][0-9]*$/, 'Must be a valid number of inches')
-      .required('Required'),
-    weight: Yup.string()
-      .required('Required')
-      .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
+    dob: Yup.date().required('Required'),
+    height: Yup.number().required('Required'),
+    weight: Yup.number().required('Required'),
     goals: Yup.string().required('Required'),
-    clientNotes: Yup.string().notRequired(),
-    programs:Yup.array()
+    memberNotes: Yup.string().notRequired(),
+    movementsScreen:Yup.array(),
+    history:Yup.array(),
   });
 
   return (
     <div>
       <Header/>
-      <Typography variant="h4" component="h1" align="center">Add New Client</Typography>
+      <Typography variant="h4" component="h1" align="center">Add New Member</Typography>
       <Formik
         initialValues={values}
         validationSchema={validationSchema}
@@ -107,41 +104,45 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
               error={touched.lastName && Boolean(errors.lastName)}
               helperText={touched.lastName && errors.lastName}
             />
-            <TextField
-              className={classes.textField}
-              id="dob"
-              label="Date of Birth (Required)"
-              name="dob"
-              value={values.dob}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.dob && Boolean(errors.dob)}
-              helperText={touched.dob && errors.dob}
-            />
-            <TextField
-              className={classes.textField}
-              id="height"
-              label="Height (in) (Required)"
-              name="height"
-              type="text"
-              value={values.height}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.height && Boolean(errors.height)}
-              helperText={touched.height && errors.height}
-            />
-            <TextField
-              className={classes.textField}
-              id="weight"
-              label="Weight (lbs) (Required)"
-              name="weight"
-              type="text"
-              value={values.weight}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.weight && Boolean(errors.weight)}
-              helperText={touched.weight && errors.weight}
-            />
+        <TextField
+            className={classes.textField}
+            id="dob"
+            label="Date of Birth (Required)"
+            name="dob"
+            type="date"
+            value={values.dob}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={touched.dob && Boolean(errors.dob)}
+            helperText={touched.dob && errors.dob}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            className={classes.textField}
+            id="height"
+            label="Height (inches) (Required)"
+            name="height"
+            type="number"
+            value={values.height}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={touched.height && Boolean(errors.height)}
+            helperText={touched.height && errors.height}
+          />
+          <TextField
+            className={classes.textField}
+            id="weight"
+            label="Weight (lbs) (Required)"
+            name="weight"
+            type="number"
+            value={values.weight}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={touched.weight && Boolean(errors.weight)}
+            helperText={touched.weight && errors.weight}
+          />
             <TextField
               className={classes.textField}
               id="goals"
@@ -155,17 +156,17 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
             />
             <TextField
               className={classes.textField}
-              id="clientNotes"
-              label="Client Notes (Optional)"
-              name="clientNotes"
-              value={values.clientNotes}
+              id="memberNotes"
+              label="Member Notes (Optional)"
+              name="memberNotes"
+              value={values.memberNotes}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.clientNotes && Boolean(errors.clientNotes)}
-              helperText={touched.clientNotes && errors.clientNotes}
+              error={touched.memberNotes && Boolean(errors.memberNotes)}
+              helperText={touched.memberNotes && errors.memberNotes}
             />
       <Button className={classes.button} type="submit" variant="contained">
-        Add Client and Create Programs
+        Add member and Add Movement Screen
       </Button>
     </Form>
   )}
@@ -173,4 +174,4 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
 </div>
 );
               }
-export default AddClientPage;
+export default AddMemberPage;

@@ -25,8 +25,8 @@ import {
   handleMovementRepsChange,
   handleDeleteMovement,
   handleAddMovement,
-} from "./helpers";
-import { Program, Client } from "../../Client/types";
+} from "../Programs/helpers";
+import { Program, Client } from "../../types";
 import Header from "../../components/Header";
 import { clientsRef } from "../../firebaseConfig";
 import { doc, onSnapshot, DocumentReference } from "firebase/firestore";
