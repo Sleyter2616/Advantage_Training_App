@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Typography, TableHead, TextField, Button, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {
+  Container,
+  Typography,
+  TableHead,
+  TextField,
+  Button,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+} from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import MemberDisplay from './MemberDisplay';
-import { getAuth, signOut } from "firebase/auth";
-import {  onSnapshot } from "firebase/firestore";
-import { membersRef, usersRef} from "../../firebaseConfig";
-import type { DocumentData } from "firebase/firestore";
+import { getAuth, signOut } from 'firebase/auth';
+import { onSnapshot } from 'firebase/firestore';
+import { membersRef, usersRef } from '../../firebaseConfig';
+import type { DocumentData } from 'firebase/firestore';
 import { Member } from '../../types';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,18 +48,19 @@ const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState<DocumentData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [members, setMembers] = useState<Member[]>([{
-    id: '',
-    firstName:'',
-    lastName: '',
-    dob: undefined,
-    height: undefined,
-    weight: undefined,
-    goals: '',
-    memberNotes: '',
-    movementsScreen:[],
-    history:[]
-  }
+  const [members, setMembers] = useState<Member[]>([
+    {
+      id: '',
+      firstName: '',
+      lastName: '',
+      dob: undefined,
+      height: undefined,
+      weight: undefined,
+      goals: '',
+      memberNotes: '',
+      movementsScreen: [],
+      history: [],
+    },
   ]);
   const navigate = useNavigate();
 
@@ -63,7 +74,7 @@ const HomePage = () => {
   };
 
   const filteredMembers = members.filter((member) => {
-    const memberName = `${member.firstName} ${member.lastName}`
+    const memberName = `${member.firstName} ${member.lastName}`;
     return memberName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -83,7 +94,7 @@ const HomePage = () => {
             goals: data.goals,
             memberNotes: data.memberNotes,
             movementsScreen: data.movementsScreen || [],
-            history:data.history || []
+            history: data.history || [],
           });
         }
       });
@@ -91,21 +102,24 @@ const HomePage = () => {
     });
     const unsubscribeUser = onSnapshot(usersRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          if (userData) {
-            setUser(userData);
+        const userData = doc.data();
+        if (userData) {
+          setUser(userData);
         }
       });
     });
     return () => unsubscribe();
     unsubscribeUser();
   }, []);
-  
 
   return (
     <Container className={classes.root}>
       <Typography variant="h5">Member Management</Typography>
-      {user && user.firstName && user.lastName && (<Typography variant="h3">Welcome {user.firstName} {user.lastName}</Typography>)}
+      {user && user.firstName && user.lastName && (
+        <Typography variant="h3">
+          Welcome {user.firstName} {user.lastName}
+        </Typography>
+      )}
       <form className={classes.form} onSubmit={handleSearch}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
@@ -118,7 +132,9 @@ const HomePage = () => {
           />
         </div>
       </form>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -162,4 +178,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

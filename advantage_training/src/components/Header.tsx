@@ -1,7 +1,7 @@
 import React from 'react';
-import { getAuth, signOut } from "firebase/auth";
-import { useNavigate, } from 'react-router-dom';
-import {  Button,  } from '@material-ui/core';
+import { getAuth, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -30,31 +30,29 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
-
-const Header: React.FC = ()=> {
-    const auth = getAuth()
-    const classes = useStyles()
-    const navigate = useNavigate();
-    return(
-<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-<Button
-  className={classes.button}
-  onClick={() => {
-    navigate('/home');
-  }}
->
-  Home
-</Button>
-<Button
-  variant="contained"
-  color="secondary"
-  className={classes.logout}
-  onClick={() => signOut(auth)}
->
-  Sign Out
-</Button>
-</div>
-    )
-}
-export default Header
+const Header: React.FC = () => {
+  const auth = getAuth();
+  const classes = useStyles();
+  const navigate = useNavigate();
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Button
+        className={classes.button}
+        onClick={() => {
+          navigate('/home');
+        }}
+      >
+        Home
+      </Button>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.logout}
+        onClick={() => signOut(auth)}
+      >
+        Sign Out
+      </Button>
+    </div>
+  );
+};
+export default Header;

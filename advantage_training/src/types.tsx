@@ -1,4 +1,3 @@
-
 export interface Movement {
   movementName: string;
   weight: string;
@@ -14,44 +13,43 @@ export interface Day {
 export interface Program {
   id: string;
   programName: string;
-  programNotes?:string
+  programNotes?: string;
   days: Day[];
 }
 
 export type Client = {
   id: string;
   firstName: string;
-  lastName:string
+  lastName: string;
   dob: string;
   height: string;
   weight: string;
   goals: string;
   clientNotes?: string;
-  programs:Program[];
+  programs: Program[];
 };
 export type Member = {
   id: string;
   firstName: string;
-  lastName:string
+  lastName: string;
   dob: Date | undefined;
-  height: number |undefined;
-  weight: number |undefined;
+  height: number | undefined;
+  weight: number | undefined;
   goals: string;
   memberNotes?: string;
-  movementsScreen:MovementScreen[];
+  movementsScreen: MovementScreen[];
   history: History[];
 };
-export type MovementScreen ={
-  id:string;
+export type MovementScreen = {
+  id: string;
   movementName: string;
-  movementLevel:'Green'| 'Yellow' |'Red'
-}
+  movementLevel: 'Green' | 'Yellow' | 'Red';
+};
 
-export type History ={
- id:string;
- date: Date;
- dateNotes:string;
- programDay:string;
- completed:boolean;
-
-}
+export type History = {
+  id: string;
+  date: Date;
+  dateNotes: string;
+  programDay: string;
+  completed: boolean;
+};

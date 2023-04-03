@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Typography, TableHead, TextField, Button, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {
+  Container,
+  Typography,
+  TableHead,
+  TextField,
+  Button,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+} from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import ClientDisplay from './ClientDisplay';
-import { getAuth, signOut } from "firebase/auth";
-import {  onSnapshot } from "firebase/firestore";
-import { clientsRef, usersRef} from "../../firebaseConfig";
-import type { DocumentData } from "firebase/firestore";
+import { getAuth, signOut } from 'firebase/auth';
+import { onSnapshot } from 'firebase/firestore';
+import { clientsRef, usersRef } from '../../firebaseConfig';
+import type { DocumentData } from 'firebase/firestore';
 import { Client } from '../../types';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,17 +48,18 @@ const HomePage = () => {
   const auth = getAuth();
   const [user, setUser] = useState<DocumentData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [clients, setClients] = useState<Client[]>([{
-    id: '',
-    firstName:'',
-    lastName: '',
-    dob: '',
-    height: '',
-    weight: '',
-    goals: '',
-    clientNotes: '',
-    programs:[]
-  }
+  const [clients, setClients] = useState<Client[]>([
+    {
+      id: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
+      height: '',
+      weight: '',
+      goals: '',
+      clientNotes: '',
+      programs: [],
+    },
   ]);
   const navigate = useNavigate();
 
@@ -62,7 +73,7 @@ const HomePage = () => {
   };
 
   const filteredClients = clients.filter((client) => {
-    const clientName = `${client.firstName} ${client.lastName}`
+    const clientName = `${client.firstName} ${client.lastName}`;
     return clientName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -81,7 +92,7 @@ const HomePage = () => {
             weight: data.weight,
             goals: data.goals,
             clientNotes: data.notes,
-            programs: data.programs || []
+            programs: data.programs || [],
           });
         }
       });
@@ -89,21 +100,24 @@ const HomePage = () => {
     });
     const unsubscribeUser = onSnapshot(usersRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          if (userData) {
-            setUser(userData);
+        const userData = doc.data();
+        if (userData) {
+          setUser(userData);
         }
       });
     });
     return () => unsubscribe();
     unsubscribeUser();
   }, []);
-  
 
   return (
     <Container className={classes.root}>
       <Typography variant="h5">Client Management</Typography>
-      {user && user.firstName && user.lastName && (<Typography variant="h3">Welcome {user.firstName} {user.lastName}</Typography>)}
+      {user && user.firstName && user.lastName && (
+        <Typography variant="h3">
+          Welcome {user.firstName} {user.lastName}
+        </Typography>
+      )}
       <form className={classes.form} onSubmit={handleSearch}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <TextField
@@ -116,7 +130,9 @@ const HomePage = () => {
           />
         </div>
       </form>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -160,4 +176,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

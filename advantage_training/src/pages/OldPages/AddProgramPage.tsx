@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { Program, Client, } from "../../types";
-import { Formik, Form } from "formik";
-import { useNavigate, useParams } from "react-router-dom";
-import * as Yup from "yup";
+import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Program, Client } from '../../types';
+import { Formik, Form } from 'formik';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 import {
   TextField,
   Button,
   Typography,
   Grid,
   TextareaAutosize,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { clientsRef } from "../../firebaseConfig";
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { clientsRef } from '../../firebaseConfig';
 import {
   doc,
   onSnapshot,
   DocumentReference,
   updateDoc,
-} from "firebase/firestore";
-import Header from "../../components/Header";
+} from 'firebase/firestore';
+import Header from '../../components/Header';
 
 interface AddProgramPageProps {
   onAddTrainingProgram: (trainingProgram: Program) => void;
@@ -27,31 +27,31 @@ interface AddProgramPageProps {
 
 const useStyles = makeStyles(() => ({
   form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: "1rem",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '1rem',
+    border: '1px solid #ccc',
+    borderRadius: '8px',
   },
   textField: {
-    width: "100%",
-    marginBottom: "1rem",
+    width: '100%',
+    marginBottom: '1rem',
   },
   textArea: {
-    width: "100%",
-    minHeight: "4rem",
-    marginBottom: "1rem",
+    width: '100%',
+    minHeight: '4rem',
+    marginBottom: '1rem',
   },
   logout: {
-    margin: "1rem",
+    margin: '1rem',
   },
   button: {
-    margin: "1rem",
-    background: "#3f51b5",
-    color: "#fff",
-    "&:hover": {
-      background: "#303f9f",
+    margin: '1rem',
+    background: '#3f51b5',
+    color: '#fff',
+    '&:hover': {
+      background: '#303f9f',
     },
   },
 }));
@@ -67,27 +67,26 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
 
   const [values, setValues] = useState({
     id: uuidv4(),
-    programName: "",
-    programNotes: "",
+    programName: '',
+    programNotes: '',
     days: [
       {
-        dayName: "",
-        dayNotes: "",
+        dayName: '',
+        dayNotes: '',
         movements: [
           {
-            movementName: "",
-            weight: "",
-            sets: "",
-            reps: "",
+            movementName: '',
+            weight: '',
+            sets: '',
+            reps: '',
           },
         ],
       },
     ],
   });
 
-
   useEffect(() => {
-    console.log("Fetching client with ID", id);
+    console.log('Fetching client with ID', id);
     console.log(values);
     const unsubscribe = onSnapshot(clientRef, (doc) => {
       setClient(doc.data() as Client);
@@ -98,38 +97,38 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
   }, [id]);
 
   const handleSubmit = async (values: Program) => {
-    console.log("HELLO");
+    console.log('HELLO');
     const newTrainingProgramWithId = { ...values };
     onAddTrainingProgram(newTrainingProgramWithId);
-    console.log(client, "client");
+    console.log(client, 'client');
     if (client) {
       const newPrograms = [...client.programs, newTrainingProgramWithId];
       try {
         await updateDoc(clientRef, { programs: newPrograms });
-        console.log("Client programs updated successfully");
+        console.log('Client programs updated successfully');
         navigate(`/client/${id}/programs`);
       } catch (error) {
-        console.error("Error updating client programs:", error);
+        console.error('Error updating client programs:', error);
       }
     }
   };
 
   const validationSchema = Yup.object({
-    id: Yup.string().required("Required"),
-    programName: Yup.string().required("Required"),
+    id: Yup.string().required('Required'),
+    programName: Yup.string().required('Required'),
     programNotes: Yup.string().notRequired(),
     days: Yup.array()
       .of(
         Yup.object().shape({
-          dayName: Yup.string().required("Required"),
+          dayName: Yup.string().required('Required'),
           dayNotes: Yup.string().notRequired(),
           movements: Yup.array()
             .of(
               Yup.object().shape({
-                movementName: Yup.string().required("Required"),
-                weight: Yup.string().required("Required"),
-                sets: Yup.string().required("Required"),
-                reps: Yup.string().required("Required"),
+                movementName: Yup.string().required('Required'),
+                weight: Yup.string().required('Required'),
+                sets: Yup.string().required('Required'),
+                reps: Yup.string().required('Required'),
               })
             )
             .min(1),
@@ -145,7 +144,7 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
         Add New Training Program
       </Typography>
       <Typography variant="h4" align="center">
-        {client ? `Client: ${client.firstName} ${client.lastName}` : ""}
+        {client ? `Client: ${client.firstName} ${client.lastName}` : ''}
       </Typography>
       <Formik
         initialValues={values}
@@ -185,7 +184,8 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                 <React.Fragment key={`days.${index}`}>
                   <Grid container item xs={12} justifyContent="center">
                     <Typography variant="h5" align="center">
-                      Day Details {day.dayName !=='' ? `( ${day.dayName} )`:'' }
+                      Day Details{' '}
+                      {day.dayName !== '' ? `( ${day.dayName} )` : ''}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -204,10 +204,10 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                       className={classes.button}
                       onClick={() => {
                         const newMovement = {
-                          movementName: "",
-                          weight: "0",
-                          sets: "0",
-                          reps: "0",
+                          movementName: '',
+                          weight: '0',
+                          sets: '0',
+                          reps: '0',
                         };
                         const newDays = [...values.days];
                         newDays[index].movements.push(newMovement);
@@ -225,7 +225,7 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                   {day.movements.map((movement, movementIndex) => (
                     <div
                       key={`days.${index}.movements.${movementIndex}`}
-                      style={{ padding: "1rem", border: "1px dashed black" }}
+                      style={{ padding: '1rem', border: '1px dashed black' }}
                     >
                       <Grid item xs={12} sm={12}>
                         <TextField
@@ -239,15 +239,15 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                           error={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.reps &&
-                            movement.movementName === "" &&
+                            movement.movementName === '' &&
                             Boolean(errors.days)
                           }
                           helperText={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.reps &&
-                            movement.movementName === "" &&
+                            movement.movementName === '' &&
                             Boolean(errors.days) &&
-                            " Please fill this field"
+                            ' Please fill this field'
                           }
                         />
                       </Grid>
@@ -263,15 +263,15 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                           error={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.weight &&
-                            movement.weight === "" &&
+                            movement.weight === '' &&
                             Boolean(errors.days)
                           }
                           helperText={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.weight &&
-                            movement.weight === "" &&
+                            movement.weight === '' &&
                             Boolean(errors.days) &&
-                            " Please fill this field"
+                            ' Please fill this field'
                           }
                         />
                       </Grid>
@@ -287,15 +287,15 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                           error={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.sets &&
-                            movement.sets === "" &&
+                            movement.sets === '' &&
                             Boolean(errors.days)
                           }
                           helperText={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.sets &&
-                            movement.sets === "" &&
+                            movement.sets === '' &&
                             Boolean(errors.days) &&
-                            " Please fill this field"
+                            ' Please fill this field'
                           }
                         />
                       </Grid>
@@ -311,15 +311,15 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                           error={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.reps &&
-                            movement.reps === "" &&
+                            movement.reps === '' &&
                             Boolean(errors.days)
                           }
                           helperText={
                             touched.days?.[index]?.movements?.[movementIndex]
                               ?.reps &&
-                            movement.reps === "" &&
+                            movement.reps === '' &&
                             Boolean(errors.days) &&
-                            " Please fill this field"
+                            ' Please fill this field'
                           }
                         />
                       </Grid>
@@ -354,10 +354,10 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                         newDays.splice(index, 1);
                         handleChange({
                           target: {
-                            name: "days",
+                            name: 'days',
                             value: newDays,
-                          }
-                        })
+                          },
+                        });
                       }}
                     >
                       Remove Day {day.dayName}
@@ -384,9 +384,9 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
                 const newDay = {
                   dayName: `Day ${values.days.length + 1}`,
                   movements: [
-                    { movementName: "", weight: "", sets: "", reps: "" },
+                    { movementName: '', weight: '', sets: '', reps: '' },
                   ],
-                  dayNotes: "",
+                  dayNotes: '',
                 };
                 const newDays = [...values.days, newDay];
                 const newValues = { ...values, days: newDays };
@@ -396,7 +396,7 @@ const AddProgramPage: React.FC<AddProgramPageProps> = ({
               Add Day to {values.programName}
             </Button>
             <Button className={classes.button} type="submit">
-              Save program  {values.programName}
+              Save program {values.programName}
             </Button>
           </Form>
         )}

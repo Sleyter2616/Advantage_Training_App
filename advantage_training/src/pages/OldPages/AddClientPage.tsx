@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {  doc, setDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -42,27 +42,31 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
 
   const [values, setValues] = useState({
     id: uuidv4(),
-    firstName:'',
+    firstName: '',
     lastName: '',
     dob: '',
     height: '',
     weight: '',
     goals: '',
     clientNotes: '',
-    programs:[]
+    programs: [],
   });
 
   const handleSubmit = async (values: Client) => {
     const newClientWithId = { ...values, id: uuidv4() };
     onAddClient(newClientWithId);
-    await setDoc(doc(db, "clients", newClientWithId.id), newClientWithId);
+    await setDoc(doc(db, 'clients', newClientWithId.id), newClientWithId);
     navigate(`/client/${newClientWithId.id}/add-program`);
   };
   const validationSchema = Yup.object({
     firstName: Yup.string().required('Required'),
     lastName: Yup.string().required('Required'),
-    dob: Yup.string().matches(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, 'Must be in the format MM/DD/YYYY')
-    .required('Required'),
+    dob: Yup.string()
+      .matches(
+        /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/,
+        'Must be in the format MM/DD/YYYY'
+      )
+      .required('Required'),
     height: Yup.string()
       .matches(/^[1-9][0-9]*$/, 'Must be a valid number of inches')
       .required('Required'),
@@ -71,13 +75,15 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
       .matches(/^\d+(\.\d{1,2})?$/, 'Must be a valid weight in pounds'),
     goals: Yup.string().required('Required'),
     clientNotes: Yup.string().notRequired(),
-    programs:Yup.array()
+    programs: Yup.array(),
   });
 
   return (
     <div>
-      <Header/>
-      <Typography variant="h4" component="h1" align="center">Add New Client</Typography>
+      <Header />
+      <Typography variant="h4" component="h1" align="center">
+        Add New Client
+      </Typography>
       <Formik
         initialValues={values}
         validationSchema={validationSchema}
@@ -96,7 +102,7 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
               error={touched.firstName && Boolean(errors.firstName)}
               helperText={touched.firstName && errors.firstName}
             />
-             <TextField
+            <TextField
               className={classes.textField}
               id="lastName"
               label="Last Name (Required)"
@@ -164,13 +170,17 @@ const AddClientPage: React.FC<AddClientPageProps> = ({ onAddClient }) => {
               error={touched.clientNotes && Boolean(errors.clientNotes)}
               helperText={touched.clientNotes && errors.clientNotes}
             />
-      <Button className={classes.button} type="submit" variant="contained">
-        Add Client and Create Programs
-      </Button>
-    </Form>
-  )}
-</Formik>
-</div>
-);
-              }
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+            >
+              Add Client and Create Programs
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 export default AddClientPage;

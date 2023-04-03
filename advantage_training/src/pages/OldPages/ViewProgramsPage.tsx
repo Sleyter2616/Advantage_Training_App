@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Typography,
   Table,
@@ -9,35 +9,16 @@ import {
   TableBody,
   Button,
   Divider,
-  Box
-} from "@material-ui/core";
-import { Link } from "react-router-dom";
-
-import {
-  handleProgramNameChange,
-  handleAddDay,
-  handleDayNameChange,
-  handleDayNotesChange,
-  handleMovementNameChange,
-  handleDeleteDay,
-  handleMovementWeightChange,
-  handleMovementSetsChange,
-  handleMovementRepsChange,
-  handleDeleteMovement,
-  handleAddMovement,
-} from "../Programs/helpers";
-import { Program, Client } from "../../types";
-import Header from "../../components/Header";
-import { clientsRef } from "../../firebaseConfig";
-import { doc, onSnapshot, DocumentReference } from "firebase/firestore";
+} from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { Program, Client } from '../../types';
+import Header from '../../components/Header';
+import { clientsRef } from '../../firebaseConfig';
+import { doc, onSnapshot, DocumentReference } from 'firebase/firestore';
 
 interface ProgramsParams extends Record<string, string | undefined> {
   clientId: string;
 }
-
-const buttonStyle = {
-  margin: "12px",
-};
 
 const ViewProgram = ({ program }: { program: Program }) => {
   const [expanded, setExpanded] = useState(false);
@@ -49,30 +30,27 @@ const ViewProgram = ({ program }: { program: Program }) => {
   return (
     <>
       <Typography variant="h6" align="center">
-         {program.programName}
+        {program.programName}
       </Typography>
-      <div style={{
-   display:'flex',
-   justifyContent:'center',
-   margin:'8px'
-      }}>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleExpandClick}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '8px',
+        }}
       >
-        View Program
-      </Button>
-      <Button
+        <Button variant="contained" color="primary" onClick={handleExpandClick}>
+          View Program
+        </Button>
+        <Button
           variant="contained"
           color="secondary"
           component={Link}
           to={`/client/${clientId}/edit-program/${program.id}`}
-          style={{ marginLeft: "8px" }}
+          style={{ marginLeft: '8px' }}
         >
           Edit Program
         </Button>
-      
       </div>
 
       {expanded && (
@@ -103,16 +81,16 @@ const ViewProgram = ({ program }: { program: Program }) => {
                 </TableBody>
               </Table>
               <Typography variant="h6" align="center">
-                Notes:{" "}
+                Notes:{' '}
               </Typography>
               <Typography align="center">
-                {day.dayNotes ? day.dayNotes : ""}
+                {day.dayNotes ? day.dayNotes : ''}
               </Typography>
               <Divider
                 component="div"
                 role="presentation"
                 color="black"
-                style={{ margin: "30px 0px" }}
+                style={{ margin: '30px 0px' }}
               />
             </div>
           ))}
@@ -144,30 +122,30 @@ const ViewProgramsPage = () => {
     <>
       <Header />
       <Typography variant="h3" align="center">
-  Programs for {client?.firstName} {client?.lastName}
-</Typography>
-{programs.map((program, index) => (
-< React.Fragment key={program.id}>{index ===0 &&
-      <Divider
-      component="div"
-      role="presentation"
-      color="black"
-      style={{ margin: "15px 0px" }}
-    />} 
+        Programs for {client?.firstName} {client?.lastName}
+      </Typography>
+      {programs.map((program, index) => (
+        <React.Fragment key={program.id}>
+          {index === 0 && (
+            <Divider
+              component="div"
+              role="presentation"
+              color="black"
+              style={{ margin: '15px 0px' }}
+            />
+          )}
 
-  <ViewProgram key={program.id} program={program} />
-  <Divider
-                component="div"
-                role="presentation"
-                color="black"
-                style={{ margin: "15px 0px" }}
-              />
-</ React.Fragment>
-))}
-
-  </>
-  )}
-
-
+          <ViewProgram key={program.id} program={program} />
+          <Divider
+            component="div"
+            role="presentation"
+            color="black"
+            style={{ margin: '15px 0px' }}
+          />
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
 
 export default ViewProgramsPage;

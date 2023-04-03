@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {  doc, setDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -42,21 +42,21 @@ const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
 
   const [values, setValues] = useState({
     id: uuidv4(),
-    firstName:'',
+    firstName: '',
     lastName: '',
     dob: undefined,
     height: undefined,
     weight: undefined,
     goals: '',
     memberNotes: '',
-    movementsScreen:[],
-    history:[]
+    movementsScreen: [],
+    history: [],
   });
 
   const handleSubmit = async (values: Member) => {
     const newMemberWithId = { ...values, id: uuidv4() };
     onAddMember(newMemberWithId);
-    await setDoc(doc(db, "members", newMemberWithId.id), newMemberWithId);
+    await setDoc(doc(db, 'members', newMemberWithId.id), newMemberWithId);
     navigate(`/member/${newMemberWithId.id}/add-movement-screen`);
   };
   const validationSchema = Yup.object({
@@ -67,14 +67,16 @@ const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
     weight: Yup.number().required('Required'),
     goals: Yup.string().required('Required'),
     memberNotes: Yup.string().notRequired(),
-    movementsScreen:Yup.array(),
-    history:Yup.array(),
+    movementsScreen: Yup.array(),
+    history: Yup.array(),
   });
 
   return (
     <div>
-      <Header/>
-      <Typography variant="h4" component="h1" align="center">Add New Member</Typography>
+      <Header />
+      <Typography variant="h4" component="h1" align="center">
+        Add New Member
+      </Typography>
       <Formik
         initialValues={values}
         validationSchema={validationSchema}
@@ -93,7 +95,7 @@ const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
               error={touched.firstName && Boolean(errors.firstName)}
               helperText={touched.firstName && errors.firstName}
             />
-             <TextField
+            <TextField
               className={classes.textField}
               id="lastName"
               label="Last Name (Required)"
@@ -104,45 +106,45 @@ const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
               error={touched.lastName && Boolean(errors.lastName)}
               helperText={touched.lastName && errors.lastName}
             />
-        <TextField
-            className={classes.textField}
-            id="dob"
-            label="Date of Birth (Required)"
-            name="dob"
-            type="date"
-            value={values.dob}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.dob && Boolean(errors.dob)}
-            helperText={touched.dob && errors.dob}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            className={classes.textField}
-            id="height"
-            label="Height (inches) (Required)"
-            name="height"
-            type="number"
-            value={values.height}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.height && Boolean(errors.height)}
-            helperText={touched.height && errors.height}
-          />
-          <TextField
-            className={classes.textField}
-            id="weight"
-            label="Weight (lbs) (Required)"
-            name="weight"
-            type="number"
-            value={values.weight}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.weight && Boolean(errors.weight)}
-            helperText={touched.weight && errors.weight}
-          />
+            <TextField
+              className={classes.textField}
+              id="dob"
+              label="Date of Birth (Required)"
+              name="dob"
+              type="date"
+              value={values.dob}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.dob && Boolean(errors.dob)}
+              helperText={touched.dob && errors.dob}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              className={classes.textField}
+              id="height"
+              label="Height (inches) (Required)"
+              name="height"
+              type="number"
+              value={values.height}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.height && Boolean(errors.height)}
+              helperText={touched.height && errors.height}
+            />
+            <TextField
+              className={classes.textField}
+              id="weight"
+              label="Weight (lbs) (Required)"
+              name="weight"
+              type="number"
+              value={values.weight}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.weight && Boolean(errors.weight)}
+              helperText={touched.weight && errors.weight}
+            />
             <TextField
               className={classes.textField}
               id="goals"
@@ -165,13 +167,17 @@ const AddMemberPage: React.FC<AddMemberPageProps> = ({ onAddMember }) => {
               error={touched.memberNotes && Boolean(errors.memberNotes)}
               helperText={touched.memberNotes && errors.memberNotes}
             />
-      <Button className={classes.button} type="submit" variant="contained">
-        Add member and Add Movement Screen
-      </Button>
-    </Form>
-  )}
-</Formik>
-</div>
-);
-              }
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+            >
+              Add member and Add Movement Screen
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 export default AddMemberPage;

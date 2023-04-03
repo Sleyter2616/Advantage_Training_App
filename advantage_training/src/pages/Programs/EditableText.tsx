@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { TextareaAutosize } from "@material-ui/core";
+import { useState } from 'react';
+import { TextareaAutosize } from '@material-ui/core';
 
 interface EditableTextProps {
   value: string;
@@ -7,7 +7,6 @@ interface EditableTextProps {
 }
 
 const EditableText = ({ value, onChange }: EditableTextProps) => {
- 
   const [text, setText] = useState(value);
 
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -15,18 +14,16 @@ const EditableText = ({ value, onChange }: EditableTextProps) => {
   };
 
   const handleEnterKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter") {
-
+    if (event.key === 'Enter') {
       onChange(text);
     }
   };
 
   const handleFocusOut = () => {
-
     onChange(text);
   };
 
-  return  (
+  return (
     <TextareaAutosize
       autoFocus
       value={text}
@@ -34,7 +31,7 @@ const EditableText = ({ value, onChange }: EditableTextProps) => {
       onKeyPress={handleEnterKey}
       onBlur={handleFocusOut}
     />
-  ) 
+  );
 };
 
 export default EditableText;
