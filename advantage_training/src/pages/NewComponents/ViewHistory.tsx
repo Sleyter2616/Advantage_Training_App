@@ -11,11 +11,6 @@ import {
   Button,
   TextField,
   Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from '@material-ui/core';
 import {
   onSnapshot,
@@ -28,6 +23,7 @@ import { History, Member } from '../../types';
 import Header from '../../components/Header';
 import MovementScreenDisplay from './MovementScreenDisplay';
 import CustomPagination from './CustomPagination';
+import DeleteDialog from './DeleteDialog';
 
 interface HistoryParams extends Record<string, string | undefined> {
   memberId: string;
@@ -216,23 +212,12 @@ const ViewHistoryPage = () => {
   return (
     <>
       <Header />
-      <Dialog
+      <DeleteDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Delete Row</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this row?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="primary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        name="Row"
+        onDelete={handleDeleteConfirm}
+      />
       <Typography variant="h3" align="center">
         History for {member?.firstName} {member?.lastName}
       </Typography>

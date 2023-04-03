@@ -65,7 +65,9 @@ const MemberDisplay: React.FC<MemberProps> = ({ member }) => {
     return `${feet}'${remainingInches}"`;
   }
   const memberName = `${member.firstName} ${member.lastName}`;
-  console.log(member.dob);
+  const handleEditMemberClick = () => {
+    navigate(`/member/${member.id}/edit-info`);
+  };
   return (
     <>
       <TableCell>{memberName}</TableCell>
@@ -95,6 +97,16 @@ const MemberDisplay: React.FC<MemberProps> = ({ member }) => {
           onClick={handleViewHistory}
         >
           View Member History
+        </Button>
+      </TableCell>
+      <TableCell>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={handleEditMemberClick}
+        >
+          Edit Member Info
         </Button>
       </TableCell>
     </>

@@ -11,6 +11,7 @@ import AddMovementScreenPage from './pages/NewComponents/AddMovementScreen';
 import { getAuth } from 'firebase/auth';
 import EditMovementScreen from './pages/NewComponents/EditMovementScreen';
 import ViewHistoryPage from './pages/NewComponents/ViewHistory';
+import EditMemberInfo from './pages/NewComponents/EditMemberInfo';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,6 +56,10 @@ function App() {
           <Route
             path="member/:memberId/view-history/"
             element={<ViewHistoryPage />}
+          />
+          <Route
+            path="/member/:memberId/edit-info"
+            element={<EditMemberInfo />}
           />
           {/* 
           <Route path="/add-client" element={<AddClientPage onAddClient={(client) => console.log(client)} />} />

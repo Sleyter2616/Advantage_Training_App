@@ -155,6 +155,7 @@ const HomePage = () => {
             <TableCell>Notes</TableCell>
             <TableCell>Member Screen</TableCell>
             <TableCell>Member History</TableCell>
+            <TableCell>Edit Member</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
