@@ -63,14 +63,16 @@ const EditMovementScreen = () => {
           memberData?.movementsScreen || {}
         );
 
-        if (movementScreenData) {
+        if (movementScreenData && movementScreenData.length > 0) {
           console.log('movementScreenData', movementScreenData);
           setMovementScreen(movementScreenData);
         } else {
+          navigate(`/member/${memberId}/add-movement-screen`);
           console.log('Program not found');
         }
       } else {
         console.log('Client not found');
+      
       }
     };
     getMemberScreen();

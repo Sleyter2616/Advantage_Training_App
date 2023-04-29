@@ -10,12 +10,13 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  TableContainer,
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import MemberDisplay from './MemberDisplay';
 import { getAuth, signOut } from 'firebase/auth';
 import { onSnapshot, query, where } from 'firebase/firestore';
-import { membersRef, usersRef, db } from '../../firebaseConfig';
+import { membersRef, usersRef } from '../../firebaseConfig';
 import type { DocumentData } from 'firebase/firestore';
 import { Member } from '../../types';
 
@@ -34,8 +35,13 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(1, 0, 1),
   },
-  table: {
+  tableContainer: {
     maxWidth: '100%',
+    overflowX: 'auto',
+    marginTop: theme.spacing(3),
+  },
+  table: {
+    width: '100%',
     overflowX: 'auto',
     marginTop: theme.spacing(3),
     fontSize: '0.9rem',
@@ -130,9 +136,9 @@ const HomePage = (userData:DocumentData ) => {
 
   return (
     <Container className={classes.root}>
-      <Typography variant="h5">Member Management</Typography>
+      <Typography variant="h5" align='center'>Member Management</Typography>
       {user && user.firstName && user.lastName && (
-        <Typography variant="h3">
+        <Typography  align='center' variant="h3">
           {console.log( user.firstName ,user.lastName)}
           Welcome {user.firstName} {user.lastName}
         </Typography>
@@ -161,6 +167,7 @@ const HomePage = (userData:DocumentData ) => {
           Add New Member
         </Button>
       </div>
+      <TableContainer className={classes.tableContainer}>
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
@@ -183,6 +190,7 @@ const HomePage = (userData:DocumentData ) => {
           ))}
         </TableBody>
       </Table>
+      </TableContainer>
       <Button
         variant="contained"
         color="secondary"

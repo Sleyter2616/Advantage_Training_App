@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -24,7 +24,6 @@ import Header from '../../components/Header';
 import MovementScreenDisplay from './MovementScreenDisplay';
 import CustomPagination from './CustomPagination';
 import DeleteDialog from './DeleteDialog';
-import { Tooltip } from "@material-ui/core";
 import { MenuItem, Select } from "@material-ui/core";
 
 interface HistoryParams extends Record<string, string | undefined> {
@@ -40,7 +39,9 @@ const programWeekOptions = Array.from(Array(54).keys()).map((week) => ({
   value: `${week}`,
   label: `Week ${week}`,
 }));
-
+const dateNotesCellStyle = {
+  minWidth: '150px',
+};
 const ViewHistoryPage = () => {
   const [disableSaveButton, setDisableSaveButton] = useState(true);
 
@@ -243,10 +244,10 @@ const ViewHistoryPage = () => {
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
-            <TableCell>Date Notes</TableCell>
             <TableCell>Program Week</TableCell>
             <TableCell>Program Day</TableCell>
             <TableCell>Completed</TableCell>
+            <TableCell>Date Notes</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -270,23 +271,11 @@ const ViewHistoryPage = () => {
               </TableCell>
               <TableCell>
                 {editingRowIndex === index ? (
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    value={editedHistory.dateNotes}
-                    onChange={handleEditChange('dateNotes')}
-                  />
-                ) : (
-                  h.dateNotes
-                )}
-              </TableCell>
-              <TableCell>
-                {editingRowIndex === index ? (
 
                    <Select
                      variant="outlined"
                      fullWidth
-                     value={newHistoryData.programWeek}
+                     value={editedHistory.programWeek}
                      onChange={handleEditChange('programWeek')} 
                    >
                      {programWeekOptions.map((option) => (
@@ -320,6 +309,18 @@ const ViewHistoryPage = () => {
                   />
                 ) : (
                   <Checkbox checked={h.completed} color="primary" disabled />
+                )}
+              </TableCell>
+              <TableCell style={dateNotesCellStyle}>
+                {editingRowIndex === index ? (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    value={editedHistory.dateNotes}
+                    onChange={handleEditChange('dateNotes')}
+                  />
+                ) : (
+                  h.dateNotes
                 )}
               </TableCell>
               <TableCell align="center">
@@ -381,14 +382,7 @@ const ViewHistoryPage = () => {
                     onChange={handleNewRowChange('date')}
                   />
                 </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    value={newHistoryData.dateNotes}
-                    onChange={handleNewRowChange('dateNotes')}
-                  />
-                </TableCell>
+                
                 <TableCell>
   <Select
     variant="outlined"
@@ -416,6 +410,14 @@ const ViewHistoryPage = () => {
                     checked={newHistoryData.completed}
                     color="secondary"
                     onChange={handleNewRowChange('completed')}
+                  />
+                </TableCell>
+                <TableCell style={dateNotesCellStyle}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    value={newHistoryData.dateNotes}
+                    onChange={handleNewRowChange('dateNotes')}
                   />
                 </TableCell>
                 <TableCell align="center">
