@@ -50,6 +50,7 @@ export type History = {
   id: string;
   date: Date;
   dateNotes: string;
+  programWeek: string;
   programDay: string;
   completed: boolean;
 };

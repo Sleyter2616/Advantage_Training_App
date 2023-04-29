@@ -12,9 +12,11 @@ import { getAuth } from 'firebase/auth';
 import EditMovementScreen from './pages/NewComponents/EditMovementScreen';
 import ViewHistoryPage from './pages/NewComponents/ViewHistory';
 import EditMemberInfo from './pages/NewComponents/EditMemberInfo';
+import { DocumentData } from 'firebase/firestore';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<DocumentData | null>(null);
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -22,8 +24,10 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
+        setUser(user);
       } else {
         setIsLoggedIn(false);
+        setUser(null);
         navigate('/');
       }
     });
@@ -38,7 +42,7 @@ function App() {
             path="/"
             element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
           />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<HomePage  userData={user}  />} />
           <Route
             path="/add-member"
             element={

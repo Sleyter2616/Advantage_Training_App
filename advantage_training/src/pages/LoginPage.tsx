@@ -28,8 +28,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   form: {
-    width: '100%',
+    width: '100%', // Full width on xs screens
     marginTop: theme.spacing(3),
+    [theme.breakpoints.up('sm')]: {
+      width: '80%', // 80% width on sm screens and up
+    },
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -41,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
 
 export interface Trainer {
   firstName: string;
@@ -71,6 +75,7 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
             const userData = userDoc.data();
             const user = {
               email: userData.email,
+              displayName: userData.displayName,
               firstName: userData.firstName,
               lastName: userData.lastName,
               uid: userAuth.uid,
@@ -110,6 +115,7 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
         const docRef = doc(db, 'users', user.uid);
         await setDoc(docRef, {
           email: email,
+          displayName: `${firstName} ${lastName}`,
           firstName: firstName,
           lastName: lastName,
           uid: user.uid,
@@ -152,7 +158,13 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
       .required('Last name is required'),
     email: Yup.string()
       .email('Invalid email address')
-      .required('Email is required'),
+      .required('Email is required')
+      .test('advantage-email', 'Email must end with @advantagepersonaltraining.com', (value) => {
+        if (value) {
+          return value.endsWith('@advantagepersonaltraining.com');
+        }
+        return true;
+      }),
     password: Yup.string()
       .required('Password is required')
       .matches(
@@ -181,7 +193,7 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
   });
   return (
     <Container className={classes.root}>
-      <Typography variant="h3">Advantage Training</Typography>
+      <Typography variant="h3" align='center'>Advantage Training</Typography>
       <Typography variant="h5">
         {formType === 'login' ? 'Login' : 'Create an Account'}
       </Typography>
@@ -261,6 +273,31 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
         >
           {(formik) => (
             <Form className={classes.form}>
+                 <TextField
+                label="Email"
+                variant="outlined"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                fullWidth
+                margin="normal"
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+              <TextField
+                label="Password"
+                variant="outlined"
+                name="password"
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                fullWidth
+                margin="normal"
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+              />
               <TextField
                 label="First Name"
                 variant="outlined"
@@ -287,31 +324,7 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
                 }
                 helperText={formik.touched.lastName && formik.errors.lastName}
               />
-              <TextField
-                label="Email"
-                variant="outlined"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-              <TextField
-                label="Password"
-                variant="outlined"
-                name="password"
-                type="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
-              />
+           
               <Button
                 className={classes.submit}
                 color="primary"

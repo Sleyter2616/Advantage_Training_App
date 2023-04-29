@@ -24,6 +24,8 @@ import Header from '../../components/Header';
 import MovementScreenDisplay from './MovementScreenDisplay';
 import CustomPagination from './CustomPagination';
 import DeleteDialog from './DeleteDialog';
+import { Tooltip } from "@material-ui/core";
+import { MenuItem, Select } from "@material-ui/core";
 
 interface HistoryParams extends Record<string, string | undefined> {
   memberId: string;
@@ -34,6 +36,10 @@ const buttonStyle = {
 };
 
 const ROWS_PER_PAGE = 5;
+const programWeekOptions = Array.from(Array(54).keys()).map((week) => ({
+  value: `${week}`,
+  label: `Week ${week}`,
+}));
 
 const ViewHistoryPage = () => {
   const [disableSaveButton, setDisableSaveButton] = useState(true);
@@ -49,6 +55,7 @@ const ViewHistoryPage = () => {
     id: uuidv4(),
     date: new Date(),
     dateNotes: '',
+    programWeek: '1',
     programDay: '',
     completed: false,
   });
@@ -57,6 +64,7 @@ const ViewHistoryPage = () => {
     id: '',
     date: new Date(),
     dateNotes: '',
+    programWeek: '1',
     programDay: '',
     completed: false,
   });
@@ -109,6 +117,7 @@ const ViewHistoryPage = () => {
       id: '',
       date: new Date(),
       dateNotes: '',
+      programWeek: '1',
       programDay: '',
       completed: false,
     });
@@ -124,6 +133,7 @@ const ViewHistoryPage = () => {
       id: uuidv4(),
       date: new Date(),
       dateNotes: '',
+      programWeek: '1',
       programDay: '',
       completed: false,
     });
@@ -136,6 +146,7 @@ const ViewHistoryPage = () => {
         id: newId,
         date: newHistoryData.date,
         dateNotes: newHistoryData.dateNotes,
+        programWeek: newHistoryData.programWeek,
         programDay: newHistoryData.programDay,
         completed: newHistoryData.completed,
       };
@@ -153,6 +164,7 @@ const ViewHistoryPage = () => {
         id: uuidv4(),
         date: new Date(year, month, day),
         dateNotes: '',
+        programWeek: '1',
         programDay: '',
         completed: false,
       });
@@ -161,22 +173,28 @@ const ViewHistoryPage = () => {
     }
   };
 
-  const handleNewRowChange =
-    (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
-      const value =
-        name === 'completed' ? event.target.checked : event.target.value;
-      setNewHistoryData({ ...newHistoryData, [name]: value });
+  const handleNewRowChange = (name: string) => (
+    event: React.ChangeEvent<{ name?: string; value: unknown } >
+  ) => {
+    const isCheckbox = name === 'completed';
+    const value = isCheckbox 
+      ? (event.target as HTMLInputElement).checked 
+      : event.target.value;
 
+      setNewHistoryData({ ...newHistoryData, [name]: value });
       if (name === 'date') {
         setDisableSaveButton(
           !value || isNaN(new Date(value as string).getTime())
         );
       }
     };
-  const handleEditChange =
-    (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
-      const value =
-        name === 'completed' ? event.target.checked : event.target.value;
+    const handleEditChange = (name: string) => (
+      event: React.ChangeEvent<{ name?: string; value: unknown }>
+    ) => {
+      const isCheckbox = name === 'completed';
+      const value = isCheckbox 
+        ? (event.target as HTMLInputElement).checked 
+        : event.target.value;
       setEditedHistory({ ...editedHistory, [name]: value });
     };
 
@@ -226,6 +244,7 @@ const ViewHistoryPage = () => {
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>Date Notes</TableCell>
+            <TableCell>Program Week</TableCell>
             <TableCell>Program Day</TableCell>
             <TableCell>Completed</TableCell>
             <TableCell align="center">Actions</TableCell>
@@ -261,6 +280,25 @@ const ViewHistoryPage = () => {
                   h.dateNotes
                 )}
               </TableCell>
+              <TableCell>
+                {editingRowIndex === index ? (
+
+                   <Select
+                     variant="outlined"
+                     fullWidth
+                     value={newHistoryData.programWeek}
+                     onChange={handleEditChange('programWeek')} 
+                   >
+                     {programWeekOptions.map((option) => (
+                       <MenuItem key={option.value} value={option.value}>
+                         {option.label}
+                       </MenuItem>
+                     ))}
+                   </Select>
+                ) : (
+                  h.programWeek
+                )}
+                </TableCell>
               <TableCell>
                 {editingRowIndex === index ? (
                   <TextField
@@ -351,6 +389,20 @@ const ViewHistoryPage = () => {
                     onChange={handleNewRowChange('dateNotes')}
                   />
                 </TableCell>
+                <TableCell>
+  <Select
+    variant="outlined"
+    fullWidth
+    value={newHistoryData.programWeek}
+    onChange={handleNewRowChange('programWeek')}
+  >
+    {programWeekOptions.map((option) => (
+      <MenuItem key={option.value} value={option.value}>
+        {option.label}
+      </MenuItem>
+    ))}
+  </Select>
+</TableCell>
                 <TableCell>
                   <TextField
                     variant="outlined"

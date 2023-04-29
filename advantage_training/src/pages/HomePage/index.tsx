@@ -14,10 +14,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import MemberDisplay from './MemberDisplay';
 import { getAuth, signOut } from 'firebase/auth';
-import { onSnapshot } from 'firebase/firestore';
-import { membersRef, usersRef } from '../../firebaseConfig';
+import { onSnapshot, query, where } from 'firebase/firestore';
+import { membersRef, usersRef, db } from '../../firebaseConfig';
 import type { DocumentData } from 'firebase/firestore';
 import { Member } from '../../types';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,10 +44,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
   },
 }));
-const HomePage = () => {
+const HomePage = (userData:DocumentData ) => {
+  console.log(userData,'user')
   const classes = useStyles();
   const auth = getAuth();
-  const [user, setUser] = useState<DocumentData | null>(null);
+  const [user, setUser] = useState<DocumentData | null>(null)
   const [searchTerm, setSearchTerm] = useState('');
   const [members, setMembers] = useState<Member[]>([
     {
@@ -77,9 +79,8 @@ const HomePage = () => {
     const memberName = `${member.firstName} ${member.lastName}`;
     return memberName.toLowerCase().includes(searchTerm.toLowerCase());
   });
-
   useEffect(() => {
-    const unsubscribe = onSnapshot(membersRef, (querySnapshot) => {
+    const membersUnsubscribe = onSnapshot(membersRef, (querySnapshot) => {
       const members: Member[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -100,23 +101,39 @@ const HomePage = () => {
       });
       setMembers(members);
     });
-    const unsubscribeUser = onSnapshot(usersRef, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const userData = doc.data();
-        if (userData) {
-          setUser(userData);
-        }
-      });
-    });
-    return () => unsubscribe();
-    unsubscribeUser();
+
+    return () => {
+      membersUnsubscribe();
+
+    };
   }, []);
+  useEffect(() => {
+    if (userData.userData && userData.userData.email) {
+      const unsubscribe = onSnapshot(
+        query(usersRef, where('email', '==', userData.userData.email)),
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const fullUserData = doc.data();
+            setUser({
+              ...user,
+              firstName: fullUserData.firstName,
+              lastName: fullUserData.lastName,
+            });
+          });
+        }
+      );
+      return unsubscribe;
+    }
+  }, [userData]);
+  
+  
 
   return (
     <Container className={classes.root}>
       <Typography variant="h5">Member Management</Typography>
       {user && user.firstName && user.lastName && (
         <Typography variant="h3">
+          {console.log( user.firstName ,user.lastName)}
           Welcome {user.firstName} {user.lastName}
         </Typography>
       )}
